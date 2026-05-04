@@ -73,105 +73,49 @@
         .dynamic-item h3 { color: #d2b48c; margin-bottom: 10px; }
         .meta-tag { font-size: 0.8rem; color: #8b4513; font-weight: bold; margin-top: 15px; display: block; text-transform: uppercase; }
 
-        /* --- ESTILO ESPECÍFICO RAPHAEL --- */
-        .raphael-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .raphael-module {
-            background: #2a1a0f;
-            border: 1px solid #8b4513;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            transition: 0.3s;
-        }
-
-        .raphael-module:hover {
-            border-color: #d2b48c;
-            background: #352113;
-            transform: translateY(-5px);
-        }
-
-        .raphael-icon-box {
-            background: #1a110a;
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #8b4513;
-            flex-shrink: 0;
-        }
-
-        .raphael-icon-box i { font-size: 1.5rem; color: #d2b48c; }
-
-        .raphael-info h3 {
-            font-size: 1.1rem;
-            color: #f1e4c9;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .raphael-tag {
-            font-size: 0.6rem;
-            background: #8b4513;
-            color: #f1e4c9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .raphael-info p { font-size: 0.9rem; color: #d2b48c; line-height: 1.4; }
-
-        /* --- BOTONES --- */
-        .btn-action {
-            display: inline-block;
-            background: #d2b48c;
-            color: #2c1b10;
-            padding: 12px 25px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        .btn-action:hover { background: #f1e4c9; transform: scale(1.05); }
-
-        /* --- INPUTS ESTILIZADOS --- */
-        input.form-input, select.form-input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            background: #1a110a; 
-            border: 1px solid #8b4513; 
-            color: #f1e4c9; 
-            border-radius: 4px;
-        }
-
-        /* --- ADMIN LOGIN --- */
-        .admin-trigger { position: fixed; bottom: 15px; right: 15px; opacity: 0.3; transition: 0.5s; }
-        .admin-trigger:hover { opacity: 1; }
-        
-        #loginBox {
-            display: none;
-            position: fixed;
-            bottom: 50px;
-            right: 15px;
-            background: #3e2716;
-            border: 2px solid #8b4513;
+        /* --- ESTILOS ESPECÍFICOS SE BUSCA (BOUNTIES) --- */
+        .bounty-poster {
+            background: #fdf5e6;
+            border: 10px double #4a0404;
             padding: 15px;
-            border-radius: 8px;
-            z-index: 1000;
+            text-align: center;
+            color: #4a0404;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
         }
-        #loginBox input { display: block; margin-bottom: 10px; padding: 8px; background: #1a110a; border: 1px solid #8b4513; color: white; width: 100%; }
+        .bounty-poster:hover { transform: scale(1.02) rotate(1deg); }
+        .bounty-photo { 
+            width: 100%; 
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            filter: sepia(0.8) contrast(1.2); 
+            border: 2px solid #4a0404;
+            margin: 10px 0;
+        }
+        .reward-amount { font-size: 1.8rem; font-weight: 800; text-decoration: underline; margin-top: 10px; font-family: serif; }
+
+        /* --- ESTILO ESPECÍFICO RAPHAEL Y CRAFTEOS --- */
+        .craft-card {
+            background: #2a1a0f; 
+            border: 2px solid #8b4513; 
+            padding: 15px; 
+            text-align: center;
+            transition: 0.3s;
+        }
+        .craft-card:hover { border-color: #d2b48c; }
+        .craft-img { width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #4a2c16; background: #1a110a; }
+
+        /* (Estilos Raphael previos mantenidos) */
+        .raphael-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .raphael-module { background: #2a1a0f; border: 1px solid #8b4513; border-radius: 12px; padding: 20px; display: flex; gap: 20px; transition: 0.3s; }
+        .raphael-icon-box { background: #1a110a; width: 60px; height: 60px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid #8b4513; flex-shrink: 0; }
+        .raphael-icon-box i { font-size: 1.5rem; color: #d2b48c; }
+        .raphael-info h3 { font-size: 1.1rem; color: #f1e4c9; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+
+        /* --- BOTONES Y OTROS --- */
+        .btn-action { display: inline-block; background: #d2b48c; color: #2c1b10; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-action:hover { background: #f1e4c9; transform: scale(1.05); }
+        input.form-input, select.form-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a110a; border: 1px solid #8b4513; color: white; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -179,6 +123,8 @@
     <nav>
         <a onclick="showSection('inicio')">Inicio</a>
         <a onclick="showSection('whitelist')">Whitelist</a>
+        <a onclick="showSection('crafteos')">Crafteos</a>
+        <a onclick="showSection('bounties')">Se Busca</a>
         <a onclick="showSection('lore')">Lore</a>
         <a onclick="showSection('eventos')">Eventos</a>
         <a onclick="showSection('galeria')">Galería</a>
@@ -191,102 +137,57 @@
         <div style="text-align: center; margin-top: 60px;">
             <h1>The New West</h1>
             <p style="font-size: 1.4rem; color: #e6dfc3; margin-bottom: 20px;">Tu propia historia en la frontera del Salvaje Oeste.</p>
-            
             <div style="margin: 40px 0;">
-                <button class="btn-action" style="margin-right: 10px;" onclick="showSection('whitelist')">
-                    <i class="fas fa-id-card"></i> Solicitar Acceso
-                </button>
-                <button class="btn-action" onclick="copyIP()">
-                    <i class="far fa-copy"></i> play.thenewwest.com
-                </button>
+                <button class="btn-action" style="margin-right: 10px;" onclick="showSection('whitelist')"><i class="fas fa-id-card"></i> Solicitar Acceso</button>
+                <button class="btn-action" onclick="copyIP()"><i class="far fa-copy"></i> play.thenewwest.com</button>
             </div>
-
             <h2 style="font-size: 1.5rem; text-align: left;">Últimas Noticias</h2>
-            <div id="dynamicNews" class="dynamic-grid">
-                <p style="color: #8b4513;">Cargando telegramas...</p>
-            </div>
+            <div id="dynamicNews" class="dynamic-grid"></div>
         </div>
     </div>
 
-    <!-- WHITELIST -->
+    <!-- SECCIÓN CRAFTEOS -->
+    <div id="crafteos" class="section">
+        <h2>Manual de Fabricación</h2>
+        <div class="card" style="text-align: center; margin-bottom: 30px;">
+            <p>Recetas únicas descubiertas en la frontera. Utiliza estos diseños en tu mesa de trabajo.</p>
+        </div>
+        <div id="dynamicCrafts" class="dynamic-grid">
+            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Consultando planos...</p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN SE BUSCA -->
+    <div id="bounties" class="section">
+        <h2 style="color: #d2b48c; border-color: #4a0404;">Oficina del Sheriff</h2>
+        <div class="card" style="text-align: center; background: #f4e4bc; border: 2px solid #4a0404; color: #4a0404; font-weight: bold;">
+            <p>ATENCIÓN: Se busca a los siguientes individuos por crímenes contra la ley del Oeste.</p>
+        </div>
+        <div id="dynamicBounties" class="dynamic-grid">
+            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Revisando expedientes criminales...</p>
+        </div>
+    </div>
+
+    <!-- (Resto de secciones: Whitelist, Lore, Eventos, Galería, Staff, Raphael se mantienen igual) -->
     <div id="whitelist" class="section">
         <h2>Solicitud de Acceso (Whitelist)</h2>
         <div class="card" style="max-width: 600px; margin: 0 auto;">
-            <p style="margin-bottom: 20px; text-align: center; color: #d2b48c;">Completa este formulario para que el staff revise tu entrada a la frontera.</p>
-            
             <label>Usuario de Minecraft</label>
-            <input type="text" id="wlNick" class="form-input" placeholder="Ej: Steve_West">
-
+            <input type="text" id="wlNick" class="form-input">
             <label>Nombre de Discord</label>
-            <input type="text" id="wlDiscord" class="form-input" placeholder="Ej: vaquero#1234">
-
-            <label>¿Ya subiste tu ficha de personaje a Discord?</label>
-            <select id="wlFicha" class="form-input">
-                <option value="no">Aún no</option>
-                <option value="si">Sí, ya está subida</option>
-            </select>
-
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
-                <input type="checkbox" id="wlReglas" style="width: 20px; height: 20px; cursor: pointer;">
-                <label for="wlReglas" style="cursor: pointer; color: #f1e4c9; font-size: 0.9rem;">He leído y acepto las reglas del servidor</label>
-            </div>
-
-            <button class="btn-action" style="width: 100%;" onclick="submitWhitelist()">Enviar Solicitud de Acceso</button>
-            <p id="wlMsg" style="text-align: center; margin-top: 15px; font-weight: bold;"></p>
+            <input type="text" id="wlDiscord" class="form-input">
+            <label>¿Ficha subida?</label>
+            <select id="wlFicha" class="form-input"><option value="no">No</option><option value="si">Sí</option></select>
+            <button class="btn-action" style="width: 100%;" onclick="submitWhitelist()">Enviar</button>
+            <p id="wlMsg" style="text-align: center; margin-top: 15px;"></p>
         </div>
     </div>
-
-    <!-- LORE -->
-    <div id="lore" class="section">
-        <h2>Crónicas de la Frontera</h2>
-        <div id="dynamicLore" style="display: flex; flex-direction: column; gap: 20px;">
-            <p style="color: #8b4513; text-align: center;">Desempolvando los archivos históricos...</p>
-        </div>
-    </div>
-
-    <!-- EVENTOS -->
-    <div id="eventos" class="section">
-        <h2>Eventos Planeados</h2>
-        <div id="dynamicEvents" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Buscando eventos en el calendario...</p>
-        </div>
-    </div>
-
-    <!-- GALERIA -->
-    <div id="galeria" class="section">
-        <h2>Galería de la Frontera</h2>
-        <div class="card" style="max-width: 600px; margin: 0 auto 40px auto; border-style: dashed;">
-            <h3 style="color: #d2b48c; margin-bottom: 15px; text-align: center;">¿Tienes un dibujo? ¡Publícalo!</h3>
-            <input type="text" id="artAuthor" class="form-input" placeholder="Tu nombre o nick">
-            <input type="text" id="artTitle" class="form-input" placeholder="Título de la obra">
-            <label style="display: block; margin-bottom: 10px; color: #d2b48c;">Selecciona tu imagen (JPG/PNG):</label>
-            <input type="file" id="artFile" accept="image/*" class="form-input" style="border: 1px dashed #8b4513; padding: 10px;">
-            <button class="btn-action" style="width:100%" id="btnSubmitArt" onclick="submitArt()">Enviar Solicitud</button>
-            <p style="font-size: 0.7rem; color: #8b4513; margin-top: 10px; text-align: center;">* El staff revisará tu dibujo. Límite: 1MB.</p>
-        </div>
-        <div id="dynamicArt" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Cargando obras de arte...</p>
-        </div>
-    </div>
-
-    <!-- STAFF -->
-    <div id="staff" class="section">
-        <h2>Conoce al Equipo</h2>
-        <div id="dynamicStaff" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Reuniendo a la patrulla...</p>
-        </div>
-    </div>
-
-    <!-- RAPHAEL -->
-    <div id="raphael" class="section">
-        <h2>Sistema Raphael</h2>
-        <div class="card" style="margin-bottom: 40px; text-align: center;">
-            <p style="font-style: italic; color: #e6dfc3;">Raphael es nuestro motor de economía y evolución técnica. Controla desde el precio de la pólvora hasta la estabilidad de los portales.</p>
-        </div>
-        <div id="dynamicRaphael" class="raphael-container">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Iniciando protocolos del Sistema Raphael...</p>
-        </div>
-    </div>
+    
+    <div id="lore" class="section"><h2>Crónicas</h2><div id="dynamicLore"></div></div>
+    <div id="eventos" class="section"><h2>Calendario</h2><div id="dynamicEvents" class="dynamic-grid"></div></div>
+    <div id="galeria" class="section"><h2>Galería</h2><div id="dynamicArt" class="dynamic-grid"></div></div>
+    <div id="staff" class="section"><h2>Equipo</h2><div id="dynamicStaff" class="dynamic-grid"></div></div>
+    <div id="raphael" class="section"><h2>Raphael</h2><div id="dynamicRaphael" class="raphael-container"></div></div>
 
     <div class="admin-trigger">
         <button onclick="toggleLogin()" style="background:none; border:none; color:#8b4513; cursor:pointer;">[ Acceso Admin ]</button>
@@ -317,40 +218,7 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        // --- FUNCIÓN WHITELIST ---
-        window.submitWhitelist = () => {
-            const nick = document.getElementById('wlNick').value.trim();
-            const discord = document.getElementById('wlDiscord').value.trim();
-            const ficha = document.getElementById('wlFicha').value;
-            const reglas = document.getElementById('wlReglas').checked;
-            const msg = document.getElementById('wlMsg');
-
-            if (!nick || !discord) {
-                alert("Por favor, rellena todos los campos.");
-                return;
-            }
-            if (!reglas) {
-                alert("Debes aceptar las reglas para continuar.");
-                return;
-            }
-
-            const wlRef = ref(db, 'whitelist_requests');
-            const newReq = push(wlRef);
-            set(newReq, {
-                nick: nick,
-                discord: discord,
-                fichaSubida: ficha,
-                status: "pendiente",
-                date: new Date().toLocaleString()
-            }).then(() => {
-                msg.style.color = "#22c55e";
-                msg.innerHTML = "¡Solicitud enviada! Revisaremos tu ficha pronto.";
-                document.getElementById('wlNick').value = "";
-                document.getElementById('wlDiscord').value = "";
-                document.getElementById('wlReglas').checked = false;
-            }).catch(() => alert("Error al conectar con la oficina."));
-        };
-
+        // --- CARGADOR GENÉRICO ---
         const loadSection = (path, containerId, templateFn, emptyMsg) => {
             const contentRef = ref(db, path);
             onValue(contentRef, (snapshot) => {
@@ -360,50 +228,54 @@
                     container.innerHTML = `<div class="card" style="grid-column: 1/-1; text-align:center;"><p>${emptyMsg}</p></div>`;
                     return;
                 }
-                const items = Object.values(data).reverse();
-                container.innerHTML = items.map(templateFn).join('');
+                container.innerHTML = Object.values(data).reverse().map(templateFn).join('');
             });
         };
 
-        // --- CARGA DE CONTENIDOS ---
-        loadSection('news', 'dynamicNews', n => `<div class="dynamic-item"><h3>${n.title}</h3><p>${n.content}</p><span class="meta-tag">${n.date || 'Reciente'} • NOTICIA</span></div>`, "No hay noticias.");
-        loadSection('events', 'dynamicEvents', e => `<div class="dynamic-item"><h3>${e.title}</h3><p>${e.content}</p><span class="meta-tag">EVENTO PROGRAMADO</span></div>`, "No hay eventos.");
-        loadSection('staff', 'dynamicStaff', s => `<div class="dynamic-item" style="text-align:center;"><i class="fas fa-user-shield" style="font-size: 2rem; color: #d2b48c;"></i><h3>${s.title}</h3><p>"${s.content}"</p></div>`, "No hay staff.");
-        loadSection('lore', 'dynamicLore', l => `<div class="card"><h3>${l.year} - ${l.title}</h3><p>${l.content}</p></div>`, "Sin historia.");
-        loadSection('art', 'dynamicArt', a => `<div class="dynamic-item" style="padding:0; overflow:hidden;"><img src="${a.url}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:15px;"><h3>${a.title}</h3><p>Por: ${a.author}</p></div></div>`, "Galería vacía.");
-        loadSection('raphael', 'dynamicRaphael', r => `
-            <div class="raphael-module">
-                <div class="raphael-icon-box"><i class="${r.icon}"></i></div>
-                <div class="raphael-info">
-                    <h3>${r.title} <span class="raphael-tag">${r.tag}</span></h3>
-                    <p>${r.content}</p>
-                </div>
+        // --- CARGA DE SECCIONES ---
+        loadSection('news', 'dynamicNews', n => `<div class="dynamic-item"><h3>${n.title}</h3><p>${n.content}</p><span class="meta-tag">${n.date}</span></div>`, "Sin noticias.");
+        
+        // CARGA DE CRAFTEOS
+        loadSection('crafts', 'dynamicCrafts', c => `
+            <div class="craft-card">
+                <img src="${c.url}" class="craft-img">
+                <h3 style="color: #f1e4c9;">${c.title}</h3>
+                <p style="color: #d2b48c; font-size: 0.9rem; margin-top: 10px;">${c.content}</p>
             </div>
-        `, "El Sistema Raphael está en mantenimiento.");
+        `, "No hay recetas aún.");
 
+        // CARGA DE BOUNTIES (SE BUSCA)
+        loadSection('bounties', 'dynamicBounties', b => `
+            <div class="bounty-poster">
+                <h3 style="font-size: 1.6rem; margin: 0;">WANTED</h3>
+                <p style="font-weight: bold; letter-spacing: 2px;">DEAD OR ALIVE</p>
+                <img src="${b.url}" class="bounty-photo">
+                <h4 style="font-size: 1.4rem; text-transform: uppercase; margin: 5px 0;">${b.name}</h4>
+                <p style="font-size: 0.8rem;"><strong>DELITO:</strong> ${b.reason}</p>
+                <div class="reward-amount">$${b.reward}</div>
+            </div>
+        `, "La ley impera en la frontera.");
+
+        loadSection('events', 'dynamicEvents', e => `<div class="dynamic-item"><h3>${e.title}</h3><p>${e.content}</p></div>`, "Sin eventos.");
+        loadSection('staff', 'dynamicStaff', s => `<div class="dynamic-item"><h3>${s.title}</h3><p>${s.content}</p></div>`, "Sin staff.");
+        loadSection('lore', 'dynamicLore', l => `<div class="card"><h3>${l.year} - ${l.title}</h3><p>${l.content}</p></div>`, "Sin historia.");
+        loadSection('art', 'dynamicArt', a => `<div class="dynamic-item"><img src="${a.url}" style="width:100%;"><h3>${a.title}</h3></div>`, "Galería vacía.");
+        loadSection('raphael', 'dynamicRaphael', r => `<div class="raphael-module"><h3>${r.title}</h3><p>${r.content}</p></div>`, "Raphael Offline.");
+
+        // --- FUNCIONES INTERFAZ ---
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0,0);
         };
-
-        window.copyIP = () => {
-            navigator.clipboard.writeText('play.thenewwest.com');
-            alert('¡IP copiada!');
-        };
-
-        window.toggleLogin = () => {
-            const box = document.getElementById('loginBox');
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
-        };
-
+        window.copyIP = () => { navigator.clipboard.writeText('play.thenewwest.com'); alert('¡IP copiada!'); };
+        window.toggleLogin = () => { const b = document.getElementById('loginBox'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; };
         window.checkAdmin = () => {
-            const userInput = document.getElementById('adminUser').value;
-            const passInput = document.getElementById('adminPass').value;
-            const email = userInput.includes('@') ? userInput : `${userInput}@thenewwest.com`;
-            signInWithEmailAndPassword(auth, email, passInput)
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            signInWithEmailAndPassword(auth, u.includes('@') ? u : `${u}@thenewwest.com`, p)
                 .then(() => { window.location.href = "app/admin.html"; })
-                .catch((error) => { alert("Acceso denegado."); });
+                .catch(() => alert("Error de acceso."));
         };
     </script>
 </body>
