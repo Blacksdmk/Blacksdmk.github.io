@@ -162,6 +162,16 @@
             border-radius: 4px;
         }
 
+        /* --- ESTILO PRE-REGISTRO --- */
+        .pre-reg-box {
+            background: rgba(26, 17, 10, 0.8);
+            border: 2px dashed #d2b48c;
+            padding: 20px;
+            max-width: 450px;
+            margin: 20px auto;
+            border-radius: 8px;
+        }
+
         /* --- ADMIN LOGIN --- */
         .admin-trigger { position: fixed; bottom: 15px; right: 15px; opacity: 0.3; transition: 0.5s; }
         .admin-trigger:hover { opacity: 1; }
@@ -191,16 +201,26 @@
         <a onclick="showSection('raphael')">Sistema Raphael</a>
     </nav>
 
-    <!-- LAS SECCIONES DE INICIO, LORE, ETC SE MANTIENEN IGUAL -->
     <div id="inicio" class="section active">
-        <div style="text-align: center; margin-top: 80px;">
+        <div style="text-align: center; margin-top: 60px;">
             <h1>The New West</h1>
-            <p style="font-size: 1.4rem; color: #e6dfc3; margin-bottom: 40px;">Tu propia historia en la frontera del Salvaje Oeste.</p>
+            <p style="font-size: 1.4rem; color: #e6dfc3; margin-bottom: 20px;">Tu propia historia en la frontera del Salvaje Oeste.</p>
+            
+            <!-- FORMULARIO DE PRE-REGISTRO -->
+            <div class="pre-reg-box">
+                <h3 style="color: #d2b48c; margin-bottom: 10px;"><i class="fas fa-scroll"></i> Recluta de la Frontera</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px;">Regístrate para recibir un kit de pionero al abrir.</p>
+                <input type="text" id="preRegNick" class="form-input" placeholder="Tu Nick de Minecraft" style="margin-bottom: 10px;">
+                <button class="btn-action" style="width:100%" onclick="submitPreReg()">¡Anotarme en la lista!</button>
+                <p id="preRegMsg" style="font-size: 0.8rem; margin-top: 10px; color: #d2b48c;"></p>
+            </div>
+
             <div style="margin-bottom: 60px;">
                 <button class="btn-action" onclick="copyIP()">
                     <i class="far fa-copy"></i> play.thenewwest.com
                 </button>
             </div>
+
             <h2 style="font-size: 1.5rem; text-align: left;">Últimas Noticias</h2>
             <div id="dynamicNews" class="dynamic-grid">
                 <p style="color: #8b4513;">Cargando telegramas...</p>
@@ -245,7 +265,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN RAPHAEL ACTUALIZADA -->
     <div id="raphael" class="section">
         <h2>Sistema Raphael</h2>
         <div class="card" style="margin-bottom: 40px; text-align: center;">
@@ -253,7 +272,6 @@
         </div>
         
         <div id="dynamicRaphael" class="raphael-container">
-            <!-- Los módulos se cargarán aquí -->
             <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Iniciando protocolos del Sistema Raphael...</p>
         </div>
     </div>
@@ -287,6 +305,29 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
+        // --- FUNCIÓN PRE-REGISTRO ---
+        window.submitPreReg = () => {
+            const nick = document.getElementById('preRegNick').value.trim();
+            const msg = document.getElementById('preRegMsg');
+
+            if (nick.length < 3) {
+                alert("Ese nombre es demasiado corto, vaquero.");
+                return;
+            }
+
+            const preRegRef = ref(db, 'pre_registros');
+            const newReg = push(preRegRef);
+            set(newReg, {
+                nick: nick,
+                date: new Date().toLocaleString()
+            }).then(() => {
+                msg.innerHTML = "¡Registrado! Te esperamos en la apertura, " + nick;
+                document.getElementById('preRegNick').value = "";
+            }).catch(() => {
+                alert("Error al conectar con la oficina de registros.");
+            });
+        };
+
         const loadSection = (path, containerId, templateFn, emptyMsg) => {
             const contentRef = ref(db, path);
             onValue(contentRef, (snapshot) => {
@@ -307,8 +348,6 @@
         loadSection('staff', 'dynamicStaff', s => `<div class="dynamic-item" style="text-align:center;"><i class="fas fa-user-shield" style="font-size: 2rem; color: #d2b48c;"></i><h3>${s.title}</h3><p>"${s.content}"</p></div>`, "No hay staff.");
         loadSection('lore', 'dynamicLore', l => `<div class="card"><h3>${l.year} - ${l.title}</h3><p>${l.content}</p></div>`, "Sin historia.");
         loadSection('art', 'dynamicArt', a => `<div class="dynamic-item" style="padding:0; overflow:hidden;"><img src="${a.url}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:15px;"><h3>${a.title}</h3><p>Por: ${a.author}</p></div></div>`, "Galería vacía.");
-
-        // NUEVO: CARGAR SISTEMA RAPHAEL
         loadSection('raphael', 'dynamicRaphael', r => `
             <div class="raphael-module">
                 <div class="raphael-icon-box">
@@ -321,7 +360,6 @@
             </div>
         `, "El Sistema Raphael está en mantenimiento.");
 
-        // (Mantener el resto de funciones submitArt, showSection, copyIP, etc igual que tu código anterior)
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
