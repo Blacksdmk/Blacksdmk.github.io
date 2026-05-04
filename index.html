@@ -34,23 +34,63 @@
         .section-header { text-align: center; margin-bottom: 50px; }
         .section-header h2 { font-size: 2.5rem; color: var(--dark); letter-spacing: -1px; }
 
+        /* --- ESTILOS DE INICIO (HERO & FEATURES) --- */
+        .hero-premium {
+            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), 
+                        url('https://wallpaperaccess.com/full/133744.jpg'); 
+            background-size: cover;
+            background-position: center;
+            padding: 120px 40px;
+            border-radius: 24px;
+            color: white;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .badge { background: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+        .hero-premium h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 20px 0; color: white; letter-spacing: -2px; }
+        .hero-premium p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; opacity: 0.9; }
+
+        .hero-actions { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+        
+        .ip-box { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(10px); 
+            padding: 12px 25px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            color: white;
+        }
+        .ip-box:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+        .btn-discord { background: #5865F2; color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-discord:hover { background: #4752c4; transform: translateY(-2px); }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .f-card { padding: 40px 30px; background: var(--light-bg); border-radius: 20px; text-align: center; transition: 0.3s; border: 1px solid transparent; }
+        .f-card:hover { transform: translateY(-10px); background: white; border-color: var(--border); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        .f-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
+        .f-card h3 { margin-bottom: 12px; font-size: 1.25rem; }
+
         /* --- GRID DINÁMICO --- */
         .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         
-        /* Estilo Noticias y Lore */
         .card-post { padding: 30px; border: 1px solid var(--border); border-radius: 16px; background: white; }
         .card-post span { color: var(--primary); font-weight: 700; font-size: 0.8rem; }
         .card-post h3 { margin: 10px 0; font-size: 1.4rem; }
 
-        /* Estilo Staff */
-        .staff-card { text-align: center; padding: 30px; border: 1px solid var(--border); border-radius: 16px; }
+        .staff-card { text-align: center; padding: 30px; border: 1px solid var(--border); border-radius: 16px; background: white; }
         .staff-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--primary); }
 
-        /* Estilo Se Busca */
         .bounty-card { background: #fdf5e6; border: 2px solid #4a0404; padding: 20px; text-align: center; color: #4a0404; }
         .bounty-card img { width: 100%; height: 250px; object-fit: cover; border: 1px solid #4a0404; margin-bottom: 15px; }
 
-        footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
+        footer { padding: 60px 40px; text-align: center; border-top: 1px solid var(--border); margin-top: 80px; }
     </style>
 </head>
 <body>
@@ -67,11 +107,42 @@
         </div>
     </nav>
 
-    <!-- INICIO -->
+    <!-- SECCIÓN INICIO RECARGADA -->
     <div id="inicio" class="section active">
-        <div style="text-align: center; padding: 80px 0;">
-            <h1 style="font-size: 4rem; letter-spacing: -2px;">Un Nuevo Horizonte.</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem;">Bienvenido al servidor de rol más inmersivo del Oeste.</p>
+        <div class="hero-premium">
+            <div class="hero-content">
+                <span class="badge">Temporada 1: El Despertar</span>
+                <h1>The New West</h1>
+                <p>Escribe tu propia historia en un mundo donde la ley la dictas tú. Únete a la experiencia definitiva de Rol en el Salvaje Oeste.</p>
+                
+                <div class="hero-actions">
+                    <div class="ip-box" onclick="copyIP()">
+                        <span id="serverIP">play.thenewwest.com</span>
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <a href="https://discord.gg/TU_INVITACION" target="_blank" class="btn-discord">
+                        <i class="fab fa-discord"></i> Unirse al Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="f-card">
+                <i class="fas fa-horse-head"></i>
+                <h3>Caballos Únicos</h3>
+                <p>Sistemas de crianza y razas con estadísticas reales para cruzar el desierto.</p>
+            </div>
+            <div class="f-card">
+                <i class="fas fa-gun"></i>
+                <h3>Duelos de Honor</h3>
+                <p>Mecánicas de combate personalizadas para resolver tus disputas al sol del mediodía.</p>
+            </div>
+            <div class="f-card">
+                <i class="fas fa-coins"></i>
+                <h3>Economía Viva</h3>
+                <p>Comercia con otros pueblos, asalta bancos o conviértete en un magnate minero.</p>
+            </div>
         </div>
     </div>
 
@@ -106,8 +177,8 @@
     </div>
 
     <footer>
-        <p>© 2026 The New West</p>
-        <a href="app/admin.html" style="color: #ccc; font-size: 0.7rem; text-decoration: none;">Acceso Staff</a>
+        <p>© 2026 The New West - Minecraft Roleplay</p>
+        <a href="app/admin.html" style="color: #cbd5e1; font-size: 0.75rem; text-decoration: none; margin-top: 10px; display: inline-block;">Panel de Administración</a>
     </footer>
 
     <script type="module">
@@ -127,10 +198,18 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- FUNCIÓN PARA MOSTRAR SECCIONES ---
+        // --- NAVEGACIÓN ---
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // --- COPIAR IP ---
+        window.copyIP = () => {
+            const ip = document.getElementById('serverIP').innerText;
+            navigator.clipboard.writeText(ip);
+            alert("¡IP Copiada con éxito!");
         };
 
         // --- CARGADOR DE DATOS DINÁMICOS ---
@@ -139,15 +218,14 @@
                 const data = snapshot.val();
                 const container = document.getElementById(containerId);
                 if (!data) {
-                    container.innerHTML = "<p>Próximamente...</p>";
+                    container.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#94a3b8;'>Aún no hay contenido en esta sección.</p>";
                     return;
                 }
-                // Convertimos objeto a Array y lo mostramos
                 container.innerHTML = Object.values(data).reverse().map(templateFn).join('');
             });
         };
 
-        // 1. Cargar Noticias
+        // Noticias
         loadContent('news', 'dynamicNews', n => `
             <div class="card-post">
                 <span>${n.date || 'Reciente'}</span>
@@ -156,7 +234,7 @@
             </div>
         `);
 
-        // 2. Cargar Lore (Cronología)
+        // Lore
         loadContent('lore', 'dynamicLore', l => `
             <div class="card-post">
                 <span>Año ${l.year}</span>
@@ -165,31 +243,31 @@
             </div>
         `);
 
-        // 3. Cargar Staff
+        // Staff
         loadContent('staff', 'dynamicStaff', s => `
             <div class="staff-card">
                 <img src="${s.url || 'https://via.placeholder.com/100'}" class="staff-avatar">
                 <h3>${s.name}</h3>
                 <p style="color:var(--primary); font-weight:700;">${s.role}</p>
-                <p style="font-size:0.85rem; margin-top:10px;">${s.desc}</p>
+                <p style="font-size:0.85rem; margin-top:10px; color:#64748b;">${s.desc}</p>
             </div>
         `);
 
-        // 4. Cargar Bounties
+        // Bounties
         loadContent('bounties', 'dynamicBounties', b => `
             <div class="bounty-card">
-                <p style="font-weight:900;">WANTED</p>
+                <p style="font-weight:900; letter-spacing:2px;">WANTED</p>
                 <img src="${b.url}">
                 <h3>${b.name}</h3>
                 <p>${b.reason}</p>
-                <p style="font-weight:bold; margin-top:10px; font-size:1.2rem;">RECOMPENSA: $${b.reward}</p>
+                <p style="font-weight:bold; margin-top:10px; font-size:1.3rem;">$${b.reward}</p>
             </div>
         `);
 
-        // 5. Cargar Arte
+        // Galería
         loadContent('art', 'dynamicArt', a => `
             <div class="card-post" style="padding:10px;">
-                <img src="${a.url}" style="width:100%; border-radius:10px;">
+                <img src="${a.url}" style="width:100%; border-radius:10px; display:block;">
                 <p style="text-align:center; margin-top:10px; font-weight:600;">${a.title}</p>
             </div>
         `);
