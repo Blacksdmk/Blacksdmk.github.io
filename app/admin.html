@@ -135,7 +135,35 @@
             <div id="staffList" class="post-list"></div>
         </div>
     </div>
-
+ <!-- SECCIÓN LORE -->
+    <div class="tab" onclick="switchTab(event, 'lore-admin')"><i class="fas fa-book"></i> Cronología</div>
+     <div id="lore-admin" class="content-section main-content">
+     <div class="card">
+        <h2><i class="fas fa-feather-alt"></i> Nuevo Hito Histórico</h2>
+        <div class="form-group">
+            <label>Año (ej: 1873)</label>
+            <input type="text" id="loreYear" placeholder="Año del suceso">
+        </div>
+        <div class="form-group">
+            <label>Título del Suceso</label>
+            <input type="text" id="loreTitle" placeholder="Ej: El Gran Descubrimiento">
+        </div>
+        <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" id="loreTag" placeholder="HISTORIA, EVENTO, FACCIONES...">
+        </div>
+        <div class="form-group">
+            <label>Relato</label>
+            <textarea id="loreContent" placeholder="Escribe la historia aquí..."></textarea>
+        </div>
+        <button class="btn-publish" id="btn-save-lore">Registrar en la Historia</button>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-monument"></i> Cronología Actual</h2>
+        <div id="loreAdminList" class="post-list"></div>
+    </div>
+</div>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
@@ -193,6 +221,28 @@
             saveItem('staff', { title, content, discord });
             document.getElementById('staffName').value = ''; document.getElementById('staffRange').value = ''; document.getElementById('staffDiscord').value = '';
         };
+
+        document.getElementById('btn-save-lore').onclick = () => {
+    const year = document.getElementById('loreYear').value;
+    const title = document.getElementById('loreTitle').value;
+    const tag = document.getElementById('loreTag').value;
+    const content = document.getElementById('loreContent').value;
+    
+    if(!year || !title || !content) return alert("Faltan datos históricos");
+    
+    // Guardamos en la ruta 'lore'
+    const newRef = push(ref(db, 'lore'));
+    set(newRef, { year, title, tag, content });
+    
+    // Limpiar campos
+    document.getElementById('loreYear').value = '';
+    document.getElementById('loreTitle').value = '';
+    document.getElementById('loreTag').value = '';
+    document.getElementById('loreContent').value = '';
+};
+
+// Renderizar la lista en el admin
+renderList('lore', 'loreAdminList', 'HITO');
 
         // --- RENDERIZAR LISTAS ---
         const renderList = (path, listId, metaPrefix) => {
