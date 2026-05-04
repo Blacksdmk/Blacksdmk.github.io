@@ -2,220 +2,153 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Panel - The New West</title>
+    <title>Admin Panel - The New West</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-blue: #2563eb;
-            --bg-light: #f8fafc;
-            --text-dark: #1e293b;
-            --border-color: #e2e8f0;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); padding: 40px; }
-
-        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
-        .header-title h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
-        .header-title p { color: #64748b; margin-top: 5px; }
-
-        /* --- TABS --- */
-        .tabs { display: flex; gap: 30px; border-bottom: 1px solid var(--border-color); margin-bottom: 30px; }
-        .tab { padding: 12px 5px; cursor: pointer; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 8px; position: relative; }
-        .tab.active { color: var(--primary-blue); }
-        .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--primary-blue); }
-
-        /* --- LAYOUT --- */
-        .main-content { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
-        .card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; height: fit-content; }
-        .card h2 { font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-
-        /* --- FORM --- */
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fdfdfd; font-size: 0.9rem; }
-        textarea { height: 100px; resize: none; }
-
-        .btn-publish { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-publish:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* --- LIST --- */
-        .post-list { display: flex; flex-direction: column; gap: 15px; }
-        .post-item { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #fff; }
-        .post-info h3 { font-size: 0.95rem; margin-bottom: 3px; }
-        .post-info p { font-size: 0.85rem; color: #64748b; }
-        .post-meta { font-size: 0.7rem; color: #94a3b8; font-weight: 700; margin-top: 5px; }
-        .btn-delete { color: #cbd5e1; cursor: pointer; transition: 0.3s; border: none; background: none; font-size: 1rem; }
+        :root { --blue: #2563eb; --bg: #f8fafc; --border: #e2e8f0; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; }
+        .tabs { display: flex; gap: 20px; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; color: #64748b; font-weight: bold; }
+        .tab.active { color: var(--blue); border-bottom: 2px solid var(--blue); margin-bottom: -2px; }
+        .main-content { display: grid; grid-template-columns: 350px 1fr; gap: 30px; display: none; }
+        .main-content.active { display: grid; }
+        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); height: fit-content; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid var(--border); border-radius: 6px; }
+        button { width: 100%; background: var(--blue); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .post-item { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .btn-delete { color: #cbd5e1; cursor: pointer; border: none; background: none; }
         .btn-delete:hover { color: #ef4444; }
-
-        .content-section { display: none; }
-        .content-section.active { display: grid; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-title">
-            <h1>Panel de Administración</h1>
-            <p>Gestiona el contenido de la frontera desde un solo lugar.</p>
-        </div>
-        <button class="btn-publish" style="width: auto; padding: 8px 16px;" onclick="location.href='../index.html'">Volver a la Web</button>
+    <header style="display:flex; justify-content:space-between; margin-bottom:30px;">
+        <h1>Panel de Control 🤠</h1>
+        <button style="width:auto;" onclick="location.href='../index.html'">Cerrar y Volver</button>
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="switchTab(event, 'noticias')"><i class="far fa-newspaper"></i> Noticias</div>
-        <div class="tab" onclick="switchTab(event, 'eventos')"><i class="far fa-calendar-alt"></i> Eventos</div>
-        <div class="tab" onclick="switchTab(event, 'staff')"><i class="far fa-user"></i> Staff</div>
+        <div class="tab active" onclick="switchTab(event, 'sec-news')">Noticias</div>
+        <div class="tab" onclick="switchTab(event, 'sec-events')">Eventos</div>
+        <div class="tab" onclick="switchTab(event, 'sec-staff')">Staff</div>
     </div>
 
     <!-- SECCIÓN NOTICIAS -->
-    <div id="noticias" class="content-section active main-content">
+    <div id="sec-news" class="main-content active">
         <div class="card">
-            <h2><i class="fas fa-plus"></i> Nueva Noticia</h2>
-            <div class="form-group">
-                <label>Título</label>
-                <input type="text" id="newsTitle" placeholder="Título de la noticia">
-            </div>
-            <div class="form-group">
-                <label>Contenido</label>
-                <textarea id="newsContent" placeholder="Contenido de la noticia..."></textarea>
-            </div>
-            <button class="btn-publish" onclick="saveItem('news', 'newsTitle', 'newsContent')">Publicar Noticia</button>
+            <h2>Nueva Noticia</h2>
+            <input type="text" id="n-title" placeholder="Título">
+            <textarea id="n-content" placeholder="Contenido..."></textarea>
+            <button onclick="saveToFirebase('news', 'n-title', 'n-content')">Publicar</button>
         </div>
-
-        <div class="card">
-            <h2><i class="fas fa-chart-line"></i> Noticias Publicadas</h2>
-            <div id="newsList" class="post-list"></div>
-        </div>
+        <div id="list-news" class="list-container"></div>
     </div>
 
     <!-- SECCIÓN EVENTOS -->
-    <div id="eventos" class="content-section main-content">
+    <div id="sec-events" class="main-content">
         <div class="card">
-            <h2><i class="fas fa-calendar-plus"></i> Nuevo Evento</h2>
-            <div class="form-group">
-                <label>Nombre del Evento</label>
-                <input type="text" id="eventTitle" placeholder="Ej: Duelo al Sol">
-            </div>
-            <div class="form-group">
-                <label>Fecha y Detalles</label>
-                <textarea id="eventContent" placeholder="Indica fecha, hora y descripción..."></textarea>
-            </div>
-            <button class="btn-publish" onclick="saveItem('events', 'eventTitle', 'eventContent')">Programar Evento</button>
+            <h2>Nuevo Evento</h2>
+            <input type="text" id="e-title" placeholder="Evento">
+            <textarea id="e-content" placeholder="Fecha y detalles..."></textarea>
+            <button onclick="saveToFirebase('events', 'e-title', 'e-content')">Programar</button>
         </div>
-
-        <div class="card">
-            <h2><i class="fas fa-history"></i> Eventos en Agenda</h2>
-            <div id="eventsList" class="post-list"></div>
-        </div>
+        <div id="list-events" class="list-container"></div>
     </div>
 
     <!-- SECCIÓN STAFF -->
-   <!-- REEMPLAZA SOLO LA SECCIÓN DE STAFF EN TU ADMIN.HTML -->
-<div id="staff" class="content-section main-content">
-    <div class="card">
-        <h2><i class="fas fa-user-plus"></i> Nuevo Miembro</h2>
-        <div class="form-group">
-            <label>Nombre / Nickname</label>
-            <input type="text" id="staffName" placeholder="Ej: Sheriff_John">
+    <div id="sec-staff" class="main-content">
+        <div class="card">
+            <h2>Nuevo Staff</h2>
+            <input type="text" id="s-name" placeholder="Nombre">
+            <input type="text" id="s-discord" placeholder="Discord (User#0000)">
+            <textarea id="s-desc" placeholder="Descripción corta..."></textarea>
+            <button onclick="saveStaffFirebase()">Agregar al Equipo</button>
         </div>
-        <div class="form-group">
-            <label>Usuario de Discord</label>
-            <input type="text" id="staffDiscord" placeholder="Ej: john#1234">
-        </div>
-        <div class="form-group">
-            <label>Descripción / Rango</label>
-            <textarea id="staffDesc" placeholder="Ej: Encargado de la ley y el orden en el servidor."></textarea>
-        </div>
-        <button class="btn-publish" onclick="saveStaff()">Agregar al Staff</button>
+        <div id="list-staff" class="list-container"></div>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-users-cog"></i> Equipo Actual</h2>
-        <div id="staffList" class="post-list"></div>
-    </div>
-</div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
-<script>
-// AÑADE O REEMPLAZA ESTA FUNCIÓN ESPECÍFICA EN TU SCRIPT
-function saveStaff() {
-    const title = document.getElementById('staffName').value;
-    const discord = document.getElementById('staffDiscord').value;
-    const content = document.getElementById('staffDesc').value;
-    const date = new Date().toLocaleDateString();
+        const firebaseConfig = {
+            apiKey: "AIzaSyDo7ebAVDvYEjPDscivWWKXLUoGEAGBeIM",
+            authDomain: "thenewwest-7eb5f.firebaseapp.com",
+            projectId: "thenewwest-7eb5f",
+            storageBucket: "thenewwest-7eb5f.firebasestorage.app",
+            messagingSenderId: "605270552271",
+            appId: "1:605270552271:web:a58b5b7f619e5804d7d1ba",
+            databaseURL: "https://thenewwest-7eb5f-default-rtdb.firebaseio.com/"
+        };
 
-    if(!title || !content) return alert("El nombre y la descripción son obligatorios");
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    const data = JSON.parse(localStorage.getItem('staff') || '[]');
-    // Guardamos el discord dentro del objeto
-    data.push({ title, content, discord, date, id: Date.now() });
-    localStorage.setItem('staff', JSON.stringify(data));
-    
-    // Limpiar campos
-    document.getElementById('staffName').value = '';
-    document.getElementById('staffDiscord').value = '';
-    document.getElementById('staffDesc').value = '';
-    renderAll();
-}
-</script>
-
-    <script>
-        function switchTab(event, sectionId) {
+        // --- FUNCIONES LÓGICA ---
+        window.switchTab = (e, id) => {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.getElementById(sectionId).classList.add('active');
-        }
+            document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            document.getElementById(id).classList.add('active');
+        };
 
-        // FUNCIÓN GENÉRICA PARA GUARDAR
-        function saveItem(key, titleId, contentId) {
-            const title = document.getElementById(titleId).value;
-            const content = document.getElementById(contentId).value;
-            const date = new Date().toLocaleDateString();
-
-            if(!title || !content) return alert("Por favor, rellena todos los campos");
-
-            const data = JSON.parse(localStorage.getItem(key) || '[]');
-            data.push({ title, content, date, id: Date.now() });
-            localStorage.setItem(key, JSON.stringify(data));
+        window.saveToFirebase = (path, tId, cId) => {
+            const title = document.getElementById(tId).value;
+            const content = document.getElementById(cId).value;
+            if(!title || !content) return alert("Completa los campos");
             
-            document.getElementById(titleId).value = '';
-            document.getElementById(contentId).value = '';
-            renderAll();
-        }
+            const newRef = push(ref(db, path));
+            set(newRef, { title, content, date: new Date().toLocaleDateString() });
+            document.getElementById(tId).value = "";
+            document.getElementById(cId).value = "";
+        };
 
-        // FUNCIÓN GENÉRICA PARA RENDERIZAR
-        function renderSection(key, listId, metaPrefix) {
-            const list = document.getElementById(listId);
-            const data = JSON.parse(localStorage.getItem(key) || '[]');
+        window.saveStaffFirebase = () => {
+            const title = document.getElementById('s-name').value;
+            const discord = document.getElementById('s-discord').value;
+            const content = document.getElementById('s-desc').value;
+            if(!title || !content) return alert("Completa los campos");
             
-            list.innerHTML = data.map(item => `
-                <div class="post-item">
-                    <div class="post-info">
-                        <h3>${item.title}</h3>
-                        <p>${item.content.substring(0, 60)}${item.content.length > 60 ? '...' : ''}</p>
-                        <div class="post-meta">${item.date} • ${metaPrefix}</div>
-                    </div>
-                    <button class="btn-delete" onclick="deleteItem('${key}', ${item.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('') || '<p style="color:#94a3b8; font-size:0.9rem; text-align:center;">No hay registros aún.</p>';
-        }
+            const newRef = push(ref(db, 'staff'));
+            set(newRef, { title, discord, content, date: new Date().toLocaleDateString() });
+            document.getElementById('s-name').value = "";
+            document.getElementById('s-discord').value = "";
+            document.getElementById('s-desc').value = "";
+        };
 
-        function deleteItem(key, id) {
-            let data = JSON.parse(localStorage.getItem(key) || '[]');
-            data = data.filter(item => item.id !== id);
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
-        }
+        window.deleteItem = (path, id) => {
+            if(confirm("¿Seguro que quieres borrarlo?")) {
+                remove(ref(db, `${path}/${id}`));
+            }
+        };
 
-        function renderAll() {
-            renderSection('news', 'newsList', 'NOTICIA');
-            renderSection('events', 'eventsList', 'EVENTO');
-            renderSection('staff', 'staffList', 'STAFF');
-        }
+        // --- RENDERIZADO EN TIEMPO REAL ---
+        const setupList = (path, containerId) => {
+            onValue(ref(db, path), (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById(containerId);
+                container.innerHTML = "";
+                if(data) {
+                    Object.keys(data).forEach(id => {
+                        const item = data[id];
+                        container.innerHTML += `
+                            <div class="post-item">
+                                <div>
+                                    <strong>${item.title}</strong><br>
+                                    <small>${item.date}</small>
+                                </div>
+                                <button class="btn-delete" onclick="deleteItem('${path}', '${id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                }
+            });
+        };
 
-        window.onload = renderAll;
+        setupList('news', 'list-news');
+        setupList('events', 'list-events');
+        setupList('staff', 'list-staff');
+
     </script>
 </body>
 </html>
