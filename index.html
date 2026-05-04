@@ -115,18 +115,15 @@
         <a onclick="showSection('raphael')">Sistema Raphael</a>
     </nav>
 
-    <!-- SECCIÓN: INICIO -->
     <div id="inicio" class="section active">
         <div style="text-align: center; margin-top: 80px;">
             <h1>The New West</h1>
             <p style="font-size: 1.4rem; color: #e6dfc3; margin-bottom: 40px;">Tu propia historia en la frontera del Salvaje Oeste.</p>
-            
             <div style="margin-bottom: 60px;">
                 <button class="btn-action" onclick="copyIP()">
                     <i class="far fa-copy"></i> play.thenewwest.com
                 </button>
             </div>
-
             <h2 style="font-size: 1.5rem; text-align: left;">Últimas Noticias</h2>
             <div id="dynamicNews" class="dynamic-grid">
                 <p style="color: #8b4513;">Cargando telegramas...</p>
@@ -134,7 +131,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN: LORE (AHORA DINÁMICA) -->
     <div id="lore" class="section">
         <h2>Crónicas de la Frontera</h2>
         <div id="dynamicLore" style="display: flex; flex-direction: column; gap: 20px;">
@@ -142,7 +138,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN: EVENTOS -->
     <div id="eventos" class="section">
         <h2>Eventos Planeados</h2>
         <div id="dynamicEvents" class="dynamic-grid">
@@ -150,7 +145,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN: STAFF -->
     <div id="staff" class="section">
         <h2>Conoce al Equipo</h2>
         <div id="dynamicStaff" class="dynamic-grid">
@@ -158,7 +152,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN: RAPHAEL -->
     <div id="raphael" class="section">
         <h2>Sistema Raphael</h2>
         <div class="card">
@@ -166,7 +159,6 @@
         </div>
     </div>
 
-    <!-- ACCESO ADMIN OCULTO -->
     <div class="admin-trigger">
         <button onclick="toggleLogin()" style="background:none; border:none; color:#8b4513; cursor:pointer;">[ Acceso Admin ]</button>
     </div>
@@ -177,10 +169,10 @@
         <button class="btn-action" style="width:100%; padding: 5px;" onclick="checkAdmin()">Entrar</button>
     </div>
 
-    <!-- CONFIGURACIÓN Y LÓGICA DE FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDo7ebAVDvYEjPDscivWWKXLUoGEAGBeIM",
@@ -194,24 +186,22 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
 
         const loadSection = (path, containerId, templateFn, emptyMsg) => {
             const contentRef = ref(db, path);
             onValue(contentRef, (snapshot) => {
                 const data = snapshot.val();
                 const container = document.getElementById(containerId);
-                
                 if (!data) {
                     container.innerHTML = `<div class="card" style="grid-column: 1/-1; text-align:center;"><p>${emptyMsg}</p></div>`;
                     return;
                 }
-
                 const items = Object.values(data).reverse();
                 container.innerHTML = items.map(templateFn).join('');
             });
         };
 
-        // 1. Noticias
         loadSection('news', 'dynamicNews', n => `
             <div class="dynamic-item">
                 <h3>${n.title}</h3>
@@ -220,7 +210,6 @@
             </div>
         `, "No hay noticias recientes.");
 
-        // 2. Eventos
         loadSection('events', 'dynamicEvents', e => `
             <div class="dynamic-item">
                 <h3>${e.title}</h3>
@@ -229,7 +218,6 @@
             </div>
         `, "No hay eventos en el calendario.");
 
-        // 3. Staff
         loadSection('staff', 'dynamicStaff', s => `
             <div class="dynamic-item" style="text-align:center; border-top: 3px solid #d2b48c;">
                 <i class="fas fa-user-shield" style="font-size: 2.5rem; color: #d2b48c; margin-bottom: 15px;"></i>
@@ -239,9 +227,8 @@
                     <i class="fab fa-discord" style="color: #7289da;"></i> ${s.discord || 'No disponible'}
                 </div>
             </div>
-        `, "El equipo está fuera de servicio.");
+        `, "El equipo está patrullando.");
 
-        // 4. LORE DINÁMICO
         loadSection('lore', 'dynamicLore', l => `
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom: 1px solid #8b4513; padding-bottom:10px;">
@@ -250,9 +237,8 @@
                 </div>
                 <p style="line-height:1.6; color:#e6dfc3;">${l.content}</p>
             </div>
-        `, "La historia de estas tierras aún no ha sido escrita...");
+        `, "La historia aún no ha sido escrita...");
 
-        // --- FUNCIONES GLOBALES ---
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -261,7 +247,7 @@
 
         window.copyIP = () => {
             navigator.clipboard.writeText('play.thenewwest.com');
-            alert('¡IP copiada! Nos vemos en el desierto.');
+            alert('¡IP copiada!');
         };
 
         window.toggleLogin = () => {
@@ -270,13 +256,20 @@
         };
 
         window.checkAdmin = () => {
-            const u = document.getElementById('adminUser').value;
-            const p = document.getElementById('adminPass').value;
-            if(u === "NewWest2026" && p === "IMDOTPBDI.trans") {
-                window.location.href = "app/admin.html";
-            } else {
-                alert("Credenciales incorrectas.");
-            }
+            const userInput = document.getElementById('adminUser').value;
+            const passInput = document.getElementById('adminPass').value;
+
+            // Convierte el nombre de usuario en el formato de email esperado por Firebase
+            const email = userInput.includes('@') ? userInput : `${userInput}@thenewwest.com`;
+
+            signInWithEmailAndPassword(auth, email, passInput)
+                .then(() => {
+                    window.location.href = "app/admin.html";
+                })
+                .catch((error) => {
+                    alert("Acceso denegado. Revisa tus credenciales.");
+                    console.error("Error de Auth:", error.message);
+                });
         };
     </script>
 </body>
