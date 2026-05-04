@@ -14,7 +14,7 @@
             --success-green: #22c55e;
             --gold: #d97706;
             --danger: #ef4444;
-            --west-red: #4a0404; /* Color para Se Busca */
+            --west-red: #4a0404;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -75,6 +75,7 @@
     <div class="tabs">
         <div class="tab active" onclick="switchTab(event, 'noticias')"><i class="far fa-newspaper"></i> Noticias</div>
         <div class="tab" onclick="switchTab(event, 'whitelist-admin')"><i class="fas fa-id-card"></i> Whitelist</div>
+        <div class="tab" onclick="switchTab(event, 'staff-admin')"><i class="fas fa-users-cog"></i> Staff</div>
         <div class="tab" onclick="switchTab(event, 'crafts-admin')"><i class="fas fa-hammer"></i> Crafteos</div>
         <div class="tab" onclick="switchTab(event, 'bounties-admin')"><i class="fas fa-skull-crossbones"></i> Se Busca</div>
         <div class="tab" onclick="switchTab(event, 'lore-admin')"><i class="fas fa-book"></i> Cronología</div>
@@ -93,37 +94,47 @@
         <div class="card"><h2><i class="fas fa-chart-line"></i> Publicadas</h2><div id="newsList" class="post-list"></div></div>
     </div>
 
-    <!-- CRAFTEOS (NUEVO) -->
+    <!-- STAFF (RECUPERADO) -->
+    <div id="staff-admin" class="content-section main-content">
+        <div class="card">
+            <h2><i class="fas fa-user-plus"></i> Agregar Staff</h2>
+            <div class="form-group"><label>Nombre / Nick</label><input type="text" id="staffName"></div>
+            <div class="form-group"><label>Rango (Ej: Fundador, Admin)</label><input type="text" id="staffRole"></div>
+            <div class="form-group"><label>URL de Skin o Avatar</label><input type="text" id="staffUrl" placeholder="https://..."></div>
+            <div class="form-group"><label>Descripción</label><textarea id="staffDesc"></textarea></div>
+            <button class="btn-publish" id="btn-save-staff">Guardar Miembro</button>
+        </div>
+        <div class="card"><h2>Equipo Actual</h2><div id="staffList" class="post-list"></div></div>
+    </div>
+
+    <!-- CRAFTEOS -->
     <div id="crafts-admin" class="content-section main-content">
         <div class="card">
             <h2><i class="fas fa-tools"></i> Registrar Crafteo</h2>
-            <div class="form-group"><label>Nombre del Item</label><input type="text" id="craftTitle" placeholder="Ej: Revólver de Carbón"></div>
-            <div class="form-group"><label>URL Imagen del Crafteo</label><input type="text" id="craftUrl" placeholder="Link de la imagen"></div>
-            <div class="form-group"><label>Ingredientes / Descripción</label><textarea id="craftContent" placeholder="Lista de materiales..."></textarea></div>
+            <div class="form-group"><label>Nombre del Item</label><input type="text" id="craftTitle"></div>
+            <div class="form-group"><label>URL Imagen del Crafteo</label><input type="text" id="craftUrl"></div>
+            <div class="form-group"><label>Ingredientes</label><textarea id="craftContent"></textarea></div>
             <button class="btn-publish" id="btn-save-craft">Añadir a la Guía</button>
         </div>
         <div class="card"><h2>Manual de Recetas</h2><div id="craftsList" class="post-list"></div></div>
     </div>
 
-    <!-- SE BUSCA (NUEVO) -->
+    <!-- SE BUSCA -->
     <div id="bounties-admin" class="content-section main-content">
         <div class="card">
             <h2><i class="fas fa-gavel"></i> Orden de Arresto</h2>
             <div class="form-group"><label>Nombre del Fugitivo</label><input type="text" id="bountyName"></div>
-            <div class="form-group"><label>URL Retrato (Foto)</label><input type="text" id="bountyUrl"></div>
+            <div class="form-group"><label>URL Retrato</label><input type="text" id="bountyUrl"></div>
             <div class="form-group"><label>Recompensa ($)</label><input type="number" id="bountyReward"></div>
-            <div class="form-group"><label>Crimen Cometido</label><textarea id="bountyReason"></textarea></div>
+            <div class="form-group"><label>Crimen</label><textarea id="bountyReason"></textarea></div>
             <button class="btn-publish" style="background: var(--west-red);" id="btn-save-bounty">Emitir Wanted</button>
         </div>
         <div class="card"><h2>Fugitivos Activos</h2><div id="bountiesList" class="post-list"></div></div>
     </div>
 
-    <!-- WHITELIST ADMIN -->
+    <!-- WHITELIST -->
     <div id="whitelist-admin" class="content-section full-content">
-        <div class="card">
-            <h2><i class="fas fa-id-badge"></i> Solicitudes</h2>
-            <div id="wlReqList" class="post-list"></div>
-        </div>
+        <div class="card"><h2><i class="fas fa-id-badge"></i> Solicitudes</h2><div id="wlReqList" class="post-list"></div></div>
     </div>
 
     <!-- LORE, ARTE, RAPHAEL -->
@@ -173,7 +184,6 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        // --- SEGURIDAD ---
         onAuthStateChanged(auth, (user) => {
             if (user) { document.body.style.display = "block"; } 
             else { window.location.href = "../index.html"; }
@@ -187,7 +197,6 @@
             document.getElementById(sectionId).classList.add('active');
         };
 
-        // --- FUNCIÓN GUARDAR GENÉRICA ---
         const saveItem = (path, data, fieldsToClear) => {
             const newRef = push(ref(db, path));
             set(newRef, { ...data, date: new Date().toLocaleString() })
@@ -197,63 +206,34 @@
                 });
         };
 
-        // NOTICIAS
-        document.getElementById('btn-save-news').onclick = () => {
-            saveItem('news', { 
-                title: document.getElementById('newsTitle').value, 
-                content: document.getElementById('newsContent').value 
-            }, ['newsTitle', 'newsContent']);
-        };
+        // EVENTOS DE BOTONES
+        document.getElementById('btn-save-news').onclick = () => saveItem('news', { title: document.getElementById('newsTitle').value, content: document.getElementById('newsContent').value }, ['newsTitle', 'newsContent']);
+        
+        document.getElementById('btn-save-staff').onclick = () => saveItem('staff', { 
+            name: document.getElementById('staffName').value, 
+            role: document.getElementById('staffRole').value, 
+            url: document.getElementById('staffUrl').value, 
+            desc: document.getElementById('staffDesc').value 
+        }, ['staffName', 'staffRole', 'staffUrl', 'staffDesc']);
 
-        // CRAFTEOS
-        document.getElementById('btn-save-craft').onclick = () => {
-            saveItem('crafts', {
-                title: document.getElementById('craftTitle').value,
-                url: document.getElementById('craftUrl').value,
-                content: document.getElementById('craftContent').value
-            }, ['craftTitle', 'craftUrl', 'craftContent']);
-        };
-
-        // BOUNTIES
-        document.getElementById('btn-save-bounty').onclick = () => {
-            saveItem('bounties', {
-                name: document.getElementById('bountyName').value,
-                url: document.getElementById('bountyUrl').value,
-                reward: document.getElementById('bountyReward').value,
-                reason: document.getElementById('bountyReason').value
-            }, ['bountyName', 'bountyUrl', 'bountyReward', 'bountyReason']);
-        };
-
-        // RAPHAEL
-        document.getElementById('btn-save-raphael').onclick = () => {
-            saveItem('raphael', {
-                title: document.getElementById('raphaelTitle').value,
-                icon: document.getElementById('raphaelIcon').value,
-                tag: document.getElementById('raphaelTag').value,
-                content: document.getElementById('raphaelContent').value
-            }, ['raphaelTitle', 'raphaelIcon', 'raphaelTag', 'raphaelContent']);
-        };
-
-        // LORE
-        document.getElementById('btn-save-lore').onclick = () => {
-            saveItem('lore', {
-                year: document.getElementById('loreYear').value,
-                title: document.getElementById('loreTitle').value,
-                content: document.getElementById('loreContent').value
-            }, ['loreYear', 'loreTitle', 'loreContent']);
-        };
+        document.getElementById('btn-save-craft').onclick = () => saveItem('crafts', { title: document.getElementById('craftTitle').value, url: document.getElementById('craftUrl').value, content: document.getElementById('craftContent').value }, ['craftTitle', 'craftUrl', 'craftContent']);
+        
+        document.getElementById('btn-save-bounty').onclick = () => saveItem('bounties', { name: document.getElementById('bountyName').value, url: document.getElementById('bountyUrl').value, reward: document.getElementById('bountyReward').value, reason: document.getElementById('bountyReason').value }, ['bountyName', 'bountyUrl', 'bountyReward', 'bountyReason']);
+        
+        document.getElementById('btn-save-lore').onclick = () => saveItem('lore', { year: document.getElementById('loreYear').value, title: document.getElementById('loreTitle').value, content: document.getElementById('loreContent').value }, ['loreYear', 'loreTitle', 'loreContent']);
+        
+        document.getElementById('btn-save-raphael').onclick = () => saveItem('raphael', { title: document.getElementById('raphaelTitle').value, icon: document.getElementById('raphaelIcon').value, tag: document.getElementById('raphaelTag').value, content: document.getElementById('raphaelContent').value }, ['raphaelTitle', 'raphaelIcon', 'raphaelTag', 'raphaelContent']);
 
         window.deleteItem = (path, id) => {
             if(confirm("¿Seguro que quieres borrar esto?")) remove(ref(db, `${path}/${id}`));
         };
 
-        // --- RENDERS ---
-        const renderList = (path, listId, isComplex = false) => {
+        // RENDERS
+        const renderList = (path, listId) => {
             onValue(ref(db, path), (snapshot) => {
                 const list = document.getElementById(listId);
                 const data = snapshot.val();
                 if (!data) { list.innerHTML = '<p style="color:#94a3b8; font-size:0.8rem;">No hay registros.</p>'; return; }
-                
                 list.innerHTML = Object.keys(data).map(id => {
                     const item = data[id];
                     return `
@@ -262,7 +242,7 @@
                                 ${item.url ? `<img src="${item.url}" class="thumb-preview">` : ''}
                                 <div class="post-info">
                                     <h3>${item.title || item.name || item.nick || 'Sin título'}</h3>
-                                    <p>${item.date}</p>
+                                    <p>${item.role || item.date || ''}</p>
                                 </div>
                             </div>
                             <button class="btn-delete" onclick="window.deleteItem('${path}', '${id}')"><i class="fas fa-trash"></i></button>
@@ -272,7 +252,7 @@
             });
         };
 
-        // Especial para Whitelist
+        // Whitelist Especial
         onValue(ref(db, 'whitelist_requests'), (snapshot) => {
             const list = document.getElementById('wlReqList');
             const data = snapshot.val();
@@ -289,6 +269,7 @@
         });
 
         renderList('news', 'newsList');
+        renderList('staff', 'staffList');
         renderList('crafts', 'craftsList');
         renderList('bounties', 'bountiesList');
         renderList('lore', 'loreAdminList');
