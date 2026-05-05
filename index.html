@@ -1,301 +1,321 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The New West - Servidor de Minecraft</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* --- ESTILOS BASE Y FONDO RÚSTICO --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
-        
-        body {
-            background-color: #2c1b10;
-            background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            color: #f1e4c9;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-        }
+<style>
+    /* --- TIPOGRAFÍA DE CATÁLOGO --- */
+    @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Playfair+Display:wght@700;900&display=swap');
 
-        /* --- MENÚ DE NAVEGACIÓN --- */
-        nav {
-            background-color: rgba(26, 17, 10, 0.95);
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid #8b4513;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        nav a {
-            color: #d2b48c;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            cursor: pointer;
-        }
+    body {
+        background-color: #1a140f; /* Fondo oscuro exterior */
+        background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        color: #1a1a1a;
+        font-family: 'Special Elite', serif; /* Tipo máquina de escribir */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-        nav a:hover { color: #f1e4c9; text-shadow: 0 0 10px #d2b48c; }
+    /* --- EL LIBRO / CATÁLOGO --- */
+    .catalog-page {
+        background-color: #e8d5b5; /* Color papel viejo */
+        background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+        width: 95%;
+        max-width: 1100px;
+        min-height: 90vh;
+        margin: 20px auto;
+        padding: 40px;
+        border: 15px solid #2a1a0f;
+        outline: 2px solid #e8d5b5;
+        box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        position: relative;
+    }
 
-        /* --- SECCIONES --- */
-        .section {
-            display: none;
-            width: 95%;
-            max-width: 1100px;
-            margin: 40px auto;
-            animation: fadeIn 0.4s ease;
-        }
+    /* Borde interno decorativo tipo catálogo */
+    .catalog-page::after {
+        content: '';
+        position: absolute;
+        top: 10px; left: 10px; right: 10px; bottom: 10px;
+        border: 2px solid #1a1a1a;
+        pointer-events: none;
+    }
 
-        .section.active { display: block; }
+    /* --- NAVEGACIÓN ESTILO ÍNDICE --- */
+    nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 20px;
+        border-bottom: 3px double #1a1a1a;
+        margin-bottom: 30px;
+    }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    nav a {
+        color: #1a1a1a;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
 
-        /* --- TARJETAS Y CONTENIDO --- */
-        .card {
-            background-color: #3e2716;
-            border: 2px solid #8b4513;
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
+    nav a:hover {
+        background: #1a1a1a;
+        color: #e8d5b5;
+    }
 
-        h1 { font-size: 4rem; color: #d2b48c; text-align: center; margin-bottom: 10px; }
-        h2 { color: #d2b48c; font-size: 2.2rem; margin-bottom: 25px; text-align: center; border-bottom: 1px solid #8b4513; padding-bottom: 10px; }
-        
-        /* --- ESTILO DE CONTENEDORES DINÁMICOS --- */
-        .dynamic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .dynamic-item { background: #1a110a; border-left: 4px solid #d2b48c; padding: 20px; border-radius: 4px; }
-        .dynamic-item h3 { color: #d2b48c; margin-bottom: 10px; }
-        .meta-tag { font-size: 0.8rem; color: #8b4513; font-weight: bold; margin-top: 15px; display: block; text-transform: uppercase; }
+    /* --- CABECERAS --- */
+    h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 4.5rem;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: -2px;
+        margin-bottom: 0;
+        line-height: 1;
+    }
 
-        /* --- ESTILO ESPECÍFICO RAPHAEL --- */
-        .raphael-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
+    .catalog-header {
+        text-align: center;
+        border-bottom: 3px solid #1a1a1a;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
 
-        .raphael-module {
-            background: #2a1a0f;
-            border: 1px solid #8b4513;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            transition: 0.3s;
-        }
+    h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        text-align: center;
+        text-transform: uppercase;
+        border-top: 2px solid #1a1a1a;
+        border-bottom: 2px solid #1a1a1a;
+        margin: 20px 0;
+        padding: 10px 0;
+    }
 
-        .raphael-module:hover {
-            border-color: #d2b48c;
-            background: #352113;
-            transform: translateY(-5px);
-        }
+    /* --- SECCIONES Y TARJETAS --- */
+    .section { display: none; animation: inkBleed 0.5s ease; }
+    .section.active { display: block; }
 
-        .raphael-icon-box {
-            background: #1a110a;
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #8b4513;
-            flex-shrink: 0;
-        }
+    @keyframes inkBleed {
+        from { opacity: 0; filter: blur(5px); }
+        to { opacity: 1; filter: blur(0); }
+    }
 
-        .raphael-icon-box i { font-size: 1.5rem; color: #d2b48c; }
+    .card, .dynamic-item {
+        border: 1px solid #1a1a1a;
+        padding: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        background: rgba(0,0,0,0.03);
+    }
 
-        .raphael-info h3 {
-            font-size: 1.1rem;
-            color: #f1e4c9;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .dynamic-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
 
-        .raphael-tag {
-            font-size: 0.6rem;
-            background: #8b4513;
-            color: #f1e4c9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
+    /* --- ELEMENTOS DE DISEÑO --- */
+    .price-tag {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        float: right;
+    }
 
-        .raphael-info p { font-size: 0.9rem; color: #d2b48c; line-height: 1.4; }
+    .stamp {
+        border: 3px double #8b0000;
+        color: #8b0000;
+        padding: 5px 10px;
+        display: inline-block;
+        transform: rotate(-5deg);
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 10px;
+    }
 
-        /* --- BOTONES --- */
-        .btn-action {
-            display: inline-block;
-            background: #d2b48c;
-            color: #2c1b10;
-            padding: 12px 25px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        .btn-action:hover { background: #f1e4c9; transform: scale(1.05); }
+    /* --- BOTONES Y FORMULARIOS --- */
+    .btn-action {
+        background: #1a1a1a;
+        color: #e8d5b5;
+        border: none;
+        padding: 15px 25px;
+        font-family: 'Special Elite', serif;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
 
-        /* --- INPUTS ESTILIZADOS --- */
-        input.form-input, select.form-input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            background: #1a110a; 
-            border: 1px solid #8b4513; 
-            color: #f1e4c9; 
-            border-radius: 4px;
-        }
+    .btn-action:hover {
+        background: #4a3a2a;
+    }
 
-        /* --- ADMIN LOGIN --- */
-        .admin-trigger { position: fixed; bottom: 15px; right: 15px; opacity: 0.3; transition: 0.5s; }
-        .admin-trigger:hover { opacity: 1; }
-        
-        #loginBox {
-            display: none;
-            position: fixed;
-            bottom: 50px;
-            right: 15px;
-            background: #3e2716;
-            border: 2px solid #8b4513;
-            padding: 15px;
-            border-radius: 8px;
-            z-index: 1000;
-        }
-        #loginBox input { display: block; margin-bottom: 10px; padding: 8px; background: #1a110a; border: 1px solid #8b4513; color: white; width: 100%; }
-    </style>
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #1a1a1a;
+        font-family: 'Special Elite', serif;
+        margin-bottom: 15px;
+        outline: none;
+    }
+
+    /* --- ADAPTACIÓN RAPHAEL --- */
+    .raphael-module {
+        border: 2px solid #1a1a1a;
+        padding: 15px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .raphael-icon-box {
+        font-size: 2rem;
+        border: 1px solid #1a1a1a;
+        padding: 10px;
+    }
+
+    /* --- ADMIN --- */
+    .admin-trigger { position: fixed; bottom: 10px; left: 10px; font-size: 0.7rem; opacity: 0.5; }
+    #loginBox {
+        display: none;
+        position: fixed;
+        bottom: 40px;
+        left: 10px;
+        background: #e8d5b5;
+        border: 2px solid #1a1a1a;
+        padding: 15px;
+        z-index: 1000;
+    }
+</style>
 </head>
 <body>
 
-    <nav>
-        <a onclick="showSection('inicio')">Inicio</a>
-        <a onclick="showSection('whitelist')">Whitelist</a>
-        <a onclick="showSection('lore')">Lore</a>
-        <a onclick="showSection('eventos')">Eventos</a>
-        <a onclick="showSection('galeria')">Galería</a>
-        <a onclick="showSection('staff')">Staff</a>
-        <a onclick="showSection('raphael')">Sistema Raphael</a>
-    </nav>
+    <div class="catalog-page">
+        <!-- CABECERA DEL CATÁLOGO -->
+        <div class="catalog-header">
+            <p style="font-size: 0.8rem; letter-spacing: 2px;">WHEELER, RAWSON & CO. / THE NEW WEST</p>
+            <h1>THE NEW WEST</h1>
+            <p style="font-style: italic;">"The cheapest supply house on earth for the frontiersman"</p>
+        </div>
 
-    <!-- INICIO -->
-    <div id="inicio" class="section active">
-        <div style="text-align: center; margin-top: 60px;">
-            <h1>The New West</h1>
-            <p style="font-size: 1.4rem; color: #e6dfc3; margin-bottom: 20px;">Tu propia historia en la frontera del Salvaje Oeste.</p>
-            
-            <div style="margin: 40px 0;">
-                <button class="btn-action" style="margin-right: 10px;" onclick="showSection('whitelist')">
-                    <i class="fas fa-id-card"></i> Solicitar Acceso
-                </button>
-                <button class="btn-action" onclick="copyIP()">
-                    <i class="far fa-copy"></i> play.thenewwest.com
-                </button>
+        <nav>
+            <a onclick="showSection('inicio')">Inicio</a>
+            <a onclick="showSection('whitelist')">Whitelist</a>
+            <a onclick="showSection('lore')">Lore</a>
+            <a onclick="showSection('eventos')">Eventos</a>
+            <a onclick="showSection('galeria')">Galería</a>
+            <a onclick="showSection('staff')">Staff</a>
+            <a onclick="showSection('raphael')">Raphael</a>
+        </nav>
+
+        <!-- SECCIÓN: INICIO -->
+        <div id="inicio" class="section active">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <p class="stamp">Aprobado por la Ley</p>
+                <p style="font-size: 1.2rem; margin: 20px 0;">Sea usted bienvenido a la frontera. Aquí encontrará todo lo necesario para forjar su destino en el lejano oeste.</p>
+                
+                <div style="display: flex; gap: 20px; justify-content: center; margin: 30px 0;">
+                    <button class="btn-action" style="width: auto;" onclick="showSection('whitelist')">Solicitar Acceso</button>
+                    <button class="btn-action" style="width: auto; background: transparent; color: #1a1a1a; border: 2px solid #1a1a1a;" onclick="copyIP()">Copiar Dirección IP</button>
+                </div>
             </div>
 
-            <h2 style="font-size: 1.5rem; text-align: left;">Últimas Noticias</h2>
+            <h2>Telegramas y Noticias</h2>
             <div id="dynamicNews" class="dynamic-grid">
-                <p style="color: #8b4513;">Cargando telegramas...</p>
+                <p style="text-align:center; grid-column: 1/-1;">Cargando despachos...</p>
             </div>
         </div>
-    </div>
 
-    <!-- WHITELIST -->
-    <div id="whitelist" class="section">
-        <h2>Solicitud de Acceso (Whitelist)</h2>
-        <div class="card" style="max-width: 600px; margin: 0 auto;">
-            <p style="margin-bottom: 20px; text-align: center; color: #d2b48c;">Completa este formulario para que el staff revise tu entrada a la frontera.</p>
-            
-            <label>Usuario de Minecraft</label>
-            <input type="text" id="wlNick" class="form-input" placeholder="Ej: Steve_West">
+        <!-- SECCIÓN: WHITELIST -->
+        <div id="whitelist" class="section">
+            <h2>Registro de Ciudadanía</h2>
+            <div style="max-width: 700px; margin: 0 auto; border: 1px solid #1a1a1a; padding: 30px;">
+                <p style="margin-bottom: 25px; text-align: justify; line-height: 1.4;">Debe completar este manifiesto oficial para que el Marshall autorice su entrada a nuestro territorio. Cualquier dato falso será castigado con el destierro.</p>
+                
+                <label>Nombre del Ciudadano (Nick MC)</label>
+                <input type="text" id="wlNick" class="form-input" placeholder="Nombre completo">
 
-            <label>Nombre de Discord</label>
-            <input type="text" id="wlDiscord" class="form-input" placeholder="Ej: vaquero#1234">
+                <label>Registro de Telégrafo (Discord)</label>
+                <input type="text" id="wlDiscord" class="form-input" placeholder="Usuario#0000">
 
-            <label>¿Ya subiste tu ficha de personaje a Discord?</label>
-            <select id="wlFicha" class="form-input">
-                <option value="no">Aún no</option>
-                <option value="si">Sí, ya está subida</option>
-            </select>
+                <label>¿Manifiesto de vida (Ficha) entregado?</label>
+                <select id="wlFicha" class="form-input">
+                    <option value="no">Todavía en proceso</option>
+                    <option value="si">Sí, entregada en la oficina</option>
+                </select>
 
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
-                <input type="checkbox" id="wlReglas" style="width: 20px; height: 20px; cursor: pointer;">
-                <label for="wlReglas" style="cursor: pointer; color: #f1e4c9; font-size: 0.9rem;">He leído y acepto las reglas del servidor</label>
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="wlReglas">
+                    <label for="wlReglas" style="font-size: 0.8rem;">Juro por mi honor respetar las leyes de esta frontera.</label>
+                </div>
+
+                <button class="btn-action" onclick="submitWhitelist()">Enviar a la Oficina del Marshall</button>
+                <p id="wlMsg" style="text-align: center; margin-top: 15px; font-weight: bold;"></p>
             </div>
+        </div>
 
-            <button class="btn-action" style="width: 100%;" onclick="submitWhitelist()">Enviar Solicitud de Acceso</button>
-            <p id="wlMsg" style="text-align: center; margin-top: 15px; font-weight: bold;"></p>
+        <!-- SECCIÓN: LORE -->
+        <div id="lore" class="section">
+            <h2>Crónicas Históricas</h2>
+            <div id="dynamicLore" style="display: flex; flex-direction: column; gap: 25px;">
+                <p style="text-align:center;">Abriendo los archivos de la nación...</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: EVENTOS -->
+        <div id="eventos" class="section">
+            <h2>Calendario de Diligencias</h2>
+            <div id="dynamicEvents" class="dynamic-grid"></div>
+        </div>
+
+        <!-- SECCIÓN: GALERIA -->
+        <div id="galeria" class="section">
+            <h2>Retratos y Arte de Campo</h2>
+            <div style="border: 2px dashed #1a1a1a; padding: 20px; margin-bottom: 30px; text-align: center;">
+                <h3>¿Es usted un artista?</h3>
+                <input type="text" id="artAuthor" class="form-input" placeholder="Su firma">
+                <input type="text" id="artTitle" class="form-input" placeholder="Nombre de la obra">
+                <input type="file" id="artFile" accept="image/*" class="form-input" style="border: none;">
+                <button class="btn-action" id="btnSubmitArt" onclick="submitArt()">Enviar para Exposición</button>
+            </div>
+            <div id="dynamicArt" class="dynamic-grid"></div>
+        </div>
+
+        <!-- SECCIÓN: STAFF -->
+        <div id="staff" class="section">
+            <h2>Marshall y Alguaciles</h2>
+            <div id="dynamicStaff" class="dynamic-grid"></div>
+        </div>
+
+        <!-- SECCIÓN: RAPHAEL -->
+        <div id="raphael" class="section">
+            <h2>El Sistema Automático Raphael</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-style: italic;">"La maravilla tecnológica que coordina el progreso de nuestra frontera"</p>
+            <div id="dynamicRaphael" class="dynamic-grid"></div>
+        </div>
+
+        <!-- PIE DE PÁGINA ESTILO CATÁLOGO -->
+        <div style="margin-top: 50px; border-top: 2px solid #1a1a1a; padding-top: 20px; text-align: center; font-size: 0.7rem;">
+            <p>ESTE CATÁLOGO ES PROPIEDAD DE WHEELER, RAWSON & CO. / THE NEW WEST © 2026</p>
+            <p>TODOS LOS PEDIDOS SON ENVIADOS POR DILIGENCIA A CUALQUIER PARTE DEL MUNDO</p>
         </div>
     </div>
 
-    <!-- LORE -->
-    <div id="lore" class="section">
-        <h2>Crónicas de la Frontera</h2>
-        <div id="dynamicLore" style="display: flex; flex-direction: column; gap: 20px;">
-            <p style="color: #8b4513; text-align: center;">Desempolvando los archivos históricos...</p>
-        </div>
-    </div>
-
-    <!-- EVENTOS -->
-    <div id="eventos" class="section">
-        <h2>Eventos Planeados</h2>
-        <div id="dynamicEvents" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Buscando eventos en el calendario...</p>
-        </div>
-    </div>
-
-    <!-- GALERIA -->
-    <div id="galeria" class="section">
-        <h2>Galería de la Frontera</h2>
-        <div class="card" style="max-width: 600px; margin: 0 auto 40px auto; border-style: dashed;">
-            <h3 style="color: #d2b48c; margin-bottom: 15px; text-align: center;">¿Tienes un dibujo? ¡Publícalo!</h3>
-            <input type="text" id="artAuthor" class="form-input" placeholder="Tu nombre o nick">
-            <input type="text" id="artTitle" class="form-input" placeholder="Título de la obra">
-            <label style="display: block; margin-bottom: 10px; color: #d2b48c;">Selecciona tu imagen (JPG/PNG):</label>
-            <input type="file" id="artFile" accept="image/*" class="form-input" style="border: 1px dashed #8b4513; padding: 10px;">
-            <button class="btn-action" style="width:100%" id="btnSubmitArt" onclick="submitArt()">Enviar Solicitud</button>
-            <p style="font-size: 0.7rem; color: #8b4513; margin-top: 10px; text-align: center;">* El staff revisará tu dibujo. Límite: 1MB.</p>
-        </div>
-        <div id="dynamicArt" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Cargando obras de arte...</p>
-        </div>
-    </div>
-
-    <!-- STAFF -->
-    <div id="staff" class="section">
-        <h2>Conoce al Equipo</h2>
-        <div id="dynamicStaff" class="dynamic-grid">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Reuniendo a la patrulla...</p>
-        </div>
-    </div>
-
-    <!-- RAPHAEL -->
-    <div id="raphael" class="section">
-        <h2>Sistema Raphael</h2>
-        <div class="card" style="margin-bottom: 40px; text-align: center;">
-            <p style="font-style: italic; color: #e6dfc3;">Raphael es nuestro motor de economía y evolución técnica. Controla desde el precio de la pólvora hasta la estabilidad de los portales.</p>
-        </div>
-        <div id="dynamicRaphael" class="raphael-container">
-            <p style="color: #8b4513; text-align: center; grid-column: 1/-1;">Iniciando protocolos del Sistema Raphael...</p>
-        </div>
-    </div>
-
+    <!-- ACCESO ADMIN -->
     <div class="admin-trigger">
-        <button onclick="toggleLogin()" style="background:none; border:none; color:#8b4513; cursor:pointer;">[ Acceso Admin ]</button>
+        <button onclick="toggleLogin()" style="background:none; border:none; color:#1a1a1a; cursor:pointer;">[ Master Login ]</button>
     </div>
 
     <div id="loginBox">
-        <input type="text" id="adminUser" placeholder="Usuario">
-        <input type="password" id="adminPass" placeholder="Contraseña">
-        <button class="btn-action" style="width:100%; padding: 5px;" onclick="checkAdmin()">Entrar</button>
+        <input type="text" id="adminUser" placeholder="Usuario de la Orden">
+        <input type="password" id="adminPass" placeholder="Clave Secreta">
+        <button class="btn-action" style="padding: 5px;" onclick="checkAdmin()">Ingresar</button>
     </div>
 
     <script type="module">
@@ -317,7 +337,7 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        // --- FUNCIÓN WHITELIST ---
+        // --- LÓGICA DE WHITELIST ---
         window.submitWhitelist = () => {
             const nick = document.getElementById('wlNick').value.trim();
             const discord = document.getElementById('wlDiscord').value.trim();
@@ -325,62 +345,43 @@
             const reglas = document.getElementById('wlReglas').checked;
             const msg = document.getElementById('wlMsg');
 
-            if (!nick || !discord) {
-                alert("Por favor, rellena todos los campos.");
-                return;
-            }
-            if (!reglas) {
-                alert("Debes aceptar las reglas para continuar.");
-                return;
-            }
+            if (!nick || !discord) { alert("Complete el manifiesto."); return; }
+            if (!reglas) { alert("Debe jurar respeto a las leyes."); return; }
 
             const wlRef = ref(db, 'whitelist_requests');
-            const newReq = push(wlRef);
-            set(newReq, {
-                nick: nick,
-                discord: discord,
-                fichaSubida: ficha,
-                status: "pendiente",
-                date: new Date().toLocaleString()
+            push(wlRef, {
+                nick, discord, fichaSubida: ficha, status: "pendiente", date: new Date().toLocaleString()
             }).then(() => {
-                msg.style.color = "#22c55e";
-                msg.innerHTML = "¡Solicitud enviada! Revisaremos tu ficha pronto.";
+                msg.style.color = "#1a1a1a";
+                msg.innerHTML = "¡Telegrama enviado con éxito!";
                 document.getElementById('wlNick').value = "";
                 document.getElementById('wlDiscord').value = "";
-                document.getElementById('wlReglas').checked = false;
-            }).catch(() => alert("Error al conectar con la oficina."));
-        };
-
-        const loadSection = (path, containerId, templateFn, emptyMsg) => {
-            const contentRef = ref(db, path);
-            onValue(contentRef, (snapshot) => {
-                const data = snapshot.val();
-                const container = document.getElementById(containerId);
-                if (!data) {
-                    container.innerHTML = `<div class="card" style="grid-column: 1/-1; text-align:center;"><p>${emptyMsg}</p></div>`;
-                    return;
-                }
-                const items = Object.values(data).reverse();
-                container.innerHTML = items.map(templateFn).join('');
             });
         };
 
-        // --- CARGA DE CONTENIDOS ---
-        loadSection('news', 'dynamicNews', n => `<div class="dynamic-item"><h3>${n.title}</h3><p>${n.content}</p><span class="meta-tag">${n.date || 'Reciente'} • NOTICIA</span></div>`, "No hay noticias.");
-        loadSection('events', 'dynamicEvents', e => `<div class="dynamic-item"><h3>${e.title}</h3><p>${e.content}</p><span class="meta-tag">EVENTO PROGRAMADO</span></div>`, "No hay eventos.");
-        loadSection('staff', 'dynamicStaff', s => `<div class="dynamic-item" style="text-align:center;"><i class="fas fa-user-shield" style="font-size: 2rem; color: #d2b48c;"></i><h3>${s.title}</h3><p>"${s.content}"</p></div>`, "No hay staff.");
-        loadSection('lore', 'dynamicLore', l => `<div class="card"><h3>${l.year} - ${l.title}</h3><p>${l.content}</p></div>`, "Sin historia.");
-        loadSection('art', 'dynamicArt', a => `<div class="dynamic-item" style="padding:0; overflow:hidden;"><img src="${a.url}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:15px;"><h3>${a.title}</h3><p>Por: ${a.author}</p></div></div>`, "Galería vacía.");
-        loadSection('raphael', 'dynamicRaphael', r => `
-            <div class="raphael-module">
-                <div class="raphael-icon-box"><i class="${r.icon}"></i></div>
-                <div class="raphael-info">
-                    <h3>${r.title} <span class="raphael-tag">${r.tag}</span></h3>
-                    <p>${r.content}</p>
-                </div>
-            </div>
-        `, "El Sistema Raphael está en mantenimiento.");
+        // --- CARGA DINÁMICA ---
+        const load = (path, containerId, templateFn, emptyMsg) => {
+            onValue(ref(db, path), (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById(containerId);
+                if (!data) { container.innerHTML = `<p>${emptyMsg}</p>`; return; }
+                container.innerHTML = Object.values(data).reverse().map(templateFn).join('');
+            });
+        };
 
+        load('news', 'dynamicNews', n => `<div class="card"><span class="price-tag">NEW</span><h3>${n.title}</h3><p>${n.content}</p><small style="text-transform:uppercase;">${n.date || 'Hoy'}</small></div>`, "Sin noticias.");
+        load('events', 'dynamicEvents', e => `<div class="card"><h3>${e.title}</h3><p>${e.content}</p></div>`, "Sin eventos.");
+        load('staff', 'dynamicStaff', s => `<div class="card" style="text-align:center;"><h3>${s.title}</h3><p>"${s.content}"</p></div>`, "Staff no asignado.");
+        load('lore', 'dynamicLore', l => `<div class="card"><h3>${l.year} • ${l.title}</h3><p>${l.content}</p></div>`, "Historia no escrita.");
+        load('art', 'dynamicArt', a => `<div class="card" style="padding:5px;"><img src="${a.url}" style="width:100%; border-bottom:1px solid #1a1a1a;"><div style="padding:10px;"><h3>${a.title}</h3><p>Artista: ${a.author}</p></div></div>`, "Galería vacía.");
+        load('raphael', 'dynamicRaphael', r => `
+            <div class="raphael-module">
+                <div class="raphael-icon-box"><i class="${r.icon || 'fas fa-cog'}"></i></div>
+                <div><h3>${r.title} <span class="stamp" style="font-size:0.5rem; margin:0;">${r.tag || 'Activo'}</span></h3><p>${r.content}</p></div>
+            </div>
+        `, "Sistema apagado.");
+
+        // --- NAVEGACIÓN ---
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -389,7 +390,7 @@
 
         window.copyIP = () => {
             navigator.clipboard.writeText('play.thenewwest.com');
-            alert('¡IP copiada!');
+            alert('¡Dirección IP copiada al portapapeles!');
         };
 
         window.toggleLogin = () => {
@@ -403,7 +404,7 @@
             const email = userInput.includes('@') ? userInput : `${userInput}@thenewwest.com`;
             signInWithEmailAndPassword(auth, email, passInput)
                 .then(() => { window.location.href = "app/admin.html"; })
-                .catch((error) => { alert("Acceso denegado."); });
+                .catch(() => alert("Credenciales incorrectas."));
         };
     </script>
 </body>
