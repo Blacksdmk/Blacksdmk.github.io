@@ -1,122 +1,343 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Panel - The New West</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+            --success-green: #22c55e;
+            --gold: #d97706;
+            --danger: #ef4444;
+        }
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDo7ebAVDvYEjPDscivWWKXLUoGEAGBeIM",
-        authDomain: "thenewwest-7eb5f.firebaseapp.com",
-        projectId: "thenewwest-7eb5f",
-        storageBucket: "thenewwest-7eb5f.firebasestorage.app",
-        messagingSenderId: "605270552271",
-        appId: "1:605270552271:web:a58b5b7f619e5804d7d1ba",
-        databaseURL: "https://thenewwest-7eb5f-default-rtdb.firebaseio.com/"
-    };
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding: 40px; display: none; } 
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+        .header-title h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .header-title p { color: #64748b; margin-top: 5px; }
 
-    // --- SEGURIDAD ---
-    onAuthStateChanged(auth, (user) => {
-        if (user) { document.body.style.display = "block"; } 
-        else { window.location.href = "../index.html"; }
-    });
+        .tabs { display: flex; gap: 30px; border-bottom: 1px solid var(--border-color); margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { padding: 12px 5px; cursor: pointer; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 8px; position: relative; white-space: nowrap; }
+        .tab.active { color: var(--primary-blue); }
+        .tab.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: var(--primary-blue); }
 
-    document.getElementById('btnLogout').onclick = () => signOut(auth);
+        .main-content { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+        .full-content { display: block; }
 
-    window.switchTab = (event, sectionId) => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        document.getElementById(sectionId).classList.add('active');
-    };
+        .card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; height: fit-content; margin-bottom: 20px; }
+        .card h2 { font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
-    // --- FUNCIÓN GENÉRICA PARA GUARDAR ---
-    const saveItem = (path, data, clearFields) => {
-        const newRef = push(ref(db, path));
-        set(newRef, { ...data, date: new Date().toLocaleString() })
-            .then(() => {
-                alert("¡Publicado en el Catálogo!");
-                clearFields.forEach(id => document.getElementById(id).value = "");
-            })
-            .catch(err => alert("Error: " + err.message));
-    };
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+        input, textarea, select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fdfdfd; font-size: 0.9rem; }
+        
+        .btn-publish { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-publish:hover { opacity: 0.9; transform: translateY(-1px); }
 
-    // --- ASIGNACIÓN DE BOTONES (LAS CONEXIONES QUE FALTABAN) ---
+        .post-list { display: flex; flex-direction: column; gap: 15px; }
+        .post-item { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #fff; transition: 0.2s; }
+        .post-info h3 { font-size: 0.95rem; margin-bottom: 3px; }
+        .post-info p { font-size: 0.85rem; color: #64748b; margin: 2px 0; }
+        .post-meta { font-size: 0.7rem; color: #94a3b8; font-weight: 700; margin-top: 5px; }
+        
+        .action-btns { display: flex; gap: 10px; }
+        .btn-delete { color: #cbd5e1; cursor: pointer; border: none; background: none; font-size: 1.1rem; transition: 0.3s; }
+        .btn-delete:hover { color: var(--danger); }
+        .btn-approve { color: var(--success-green); cursor: pointer; border: none; background: none; font-size: 1.1rem; }
 
-    // 1. Noticias
-    document.getElementById('btn-save-news').onclick = () => {
-        saveItem('news', { 
-            title: document.getElementById('newsTitle').value, 
-            content: document.getElementById('newsContent').value 
-        }, ['newsTitle', 'newsContent']);
-    };
+        .content-section { display: none; }
+        .content-section.active { display: grid; }
+        .content-section.active.full-content { display: block; }
 
-    // 2. Eventos
-    document.getElementById('btn-save-event').onclick = () => {
-        saveItem('events', { 
-            title: document.getElementById('eventTitle').value, 
-            content: document.getElementById('eventContent').value 
-        }, ['eventTitle', 'eventContent']);
-    };
+        .btn-logout { background: var(--danger); }
+        .art-thumb { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; margin-right: 15px; }
+        .post-flex { display: flex; align-items: center; }
 
-    // 3. Staff
-    document.getElementById('btn-save-staff').onclick = () => {
-        saveItem('staff', { 
-            title: document.getElementById('staffName').value, 
-            content: document.getElementById('staffRange').value 
-        }, ['staffName', 'staffRange']);
-    };
+        .status-pill { padding: 2px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; }
+        .pill-yes { background: #dcfce7; color: #166534; }
+        .pill-no { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
 
-    // 4. Lore (Cronología)
-    document.getElementById('btn-save-lore').onclick = () => {
-        saveItem('lore', { 
-            year: document.getElementById('loreYear').value,
-            title: document.getElementById('loreTitle').value, 
-            content: document.getElementById('loreContent').value 
-        }, ['loreYear', 'loreTitle', 'loreContent']);
-    };
+    <header>
+        <div class="header-title">
+            <h1>Master Panel</h1>
+            <p id="welcomeUser">Gestiona el acceso y contenido del servidor.</p>
+        </div>
+        <div class="admin-nav-btns" style="display: flex; gap: 10px;">
+            <button class="btn-publish" style="width: auto; padding: 8px 16px;" onclick="location.href='../index.html'">Ver Web</button>
+            <button class="btn-publish btn-logout" style="width: auto; padding: 8px 16px;" id="btnLogout">Salir</button>
+        </div>
+    </header>
 
-    // 5. Raphael (Con Etiqueta/Tag)
-    document.getElementById('btn-save-raphael').onclick = () => {
-        saveItem('raphael', { 
-            title: document.getElementById('raphaelTitle').value, 
-            content: document.getElementById('raphaelContent').value,
-            tag: document.getElementById('raphaelTag').value // Campo nuevo
-        }, ['raphaelTitle', 'raphaelContent', 'raphaelTag']);
-    };
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab(event, 'noticias')"><i class="far fa-newspaper"></i> Noticias</div>
+        <div class="tab" onclick="switchTab(event, 'eventos')"><i class="far fa-calendar-alt"></i> Eventos</div>
+        <div class="tab" onclick="switchTab(event, 'whitelist-admin')"><i class="fas fa-id-card"></i> Solicitudes Whitelist</div>
+        <div class="tab" onclick="switchTab(event, 'staff')"><i class="far fa-user"></i> Staff</div>
+        <div class="tab" onclick="switchTab(event, 'lore-admin')"><i class="fas fa-book"></i> Cronología</div>
+        <div class="tab" onclick="switchTab(event, 'arte-admin')"><i class="fas fa-paint-brush"></i> Arte</div>
+        <div class="tab" onclick="switchTab(event, 'raphael-admin')"><i class="fas fa-microchip"></i> Raphael</div>
+    </div>
 
-    window.deleteItem = (path, id) => {
-        if(confirm("¿Eliminar este registro del archivo?")) remove(ref(db, `${path}/${id}`));
-    };
+    <!-- NOTICIAS -->
+    <div id="noticias" class="content-section active main-content">
+        <div class="card">
+            <h2><i class="fas fa-plus"></i> Nueva Noticia</h2>
+            <div class="form-group"><label>Título</label><input type="text" id="newsTitle"></div>
+            <div class="form-group"><label>Contenido</label><textarea id="newsContent"></textarea></div>
+            <button class="btn-publish" id="btn-save-news">Publicar Noticia</button>
+        </div>
+        <div class="card"><h2><i class="fas fa-chart-line"></i> Publicadas</h2><div id="newsList" class="post-list"></div></div>
+    </div>
 
-    // --- RENDERIZADO DE LISTAS ---
-    const renderBasic = (path, listId) => {
-        onValue(ref(db, path), (snapshot) => {
-            const list = document.getElementById(listId);
+    <!-- WHITELIST ADMIN -->
+    <div id="whitelist-admin" class="content-section full-content">
+        <div class="card">
+            <h2><i class="fas fa-id-badge"></i> Aspirantes a la Frontera</h2>
+            <p style="margin-bottom: 20px; color: #64748b;">Revisa los datos de Discord y la ficha antes de aprobar al jugador.</p>
+            <div id="wlReqList" class="post-list"></div>
+        </div>
+    </div>
+
+    <!-- EVENTOS -->
+    <div id="eventos" class="content-section main-content">
+        <div class="card">
+            <h2><i class="fas fa-calendar-plus"></i> Nuevo Evento</h2>
+            <div class="form-group"><label>Nombre</label><input type="text" id="eventTitle"></div>
+            <div class="form-group"><label>Detalles</label><textarea id="eventContent"></textarea></div>
+            <button class="btn-publish" id="btn-save-event">Programar</button>
+        </div>
+        <div class="card"><h2><i class="fas fa-history"></i> Agenda</h2><div id="eventsList" class="post-list"></div></div>
+    </div>
+
+    <!-- STAFF -->
+    <div id="staff" class="content-section main-content">
+        <div class="card">
+            <h2><i class="fas fa-user-plus"></i> Nuevo Miembro</h2>
+            <div class="form-group"><label>Nombre</label><input type="text" id="staffName"></div>
+            <div class="form-group"><label>Rango</label><input type="text" id="staffRange"></div>
+            <button class="btn-publish" id="btn-save-staff">Agregar</button>
+        </div>
+        <div class="card"><h2><i class="fas fa-users-cog"></i> Equipo</h2><div id="staffList" class="post-list"></div></div>
+    </div>
+
+    <!-- LORE -->
+    <div id="lore-admin" class="content-section main-content">
+        <div class="card">
+            <h2><i class="fas fa-feather-alt"></i> Cronología</h2>
+            <div class="form-group"><label>Año</label><input type="text" id="loreYear"></div>
+            <div class="form-group"><label>Título</label><input type="text" id="loreTitle"></div>
+            <div class="form-group"><label>Relato</label><textarea id="loreContent"></textarea></div>
+            <button class="btn-publish" id="btn-save-lore">Guardar</button>
+        </div>
+        <div class="card"><h2>Entradas de Lore</h2><div id="loreAdminList" class="post-list"></div></div>
+    </div>
+
+    <!-- ARTE -->
+    <div id="arte-admin" class="content-section main-content">
+        <div class="card">
+            <h2>Pendientes de Aprobación</h2>
+            <div id="artPendingList" class="post-list"></div>
+        </div>
+        <div class="card">
+            <h2>Galería Pública</h2>
+            <div id="artList" class="post-list"></div>
+        </div>
+    </div>
+
+    <!-- RAPHAEL -->
+    <div id="raphael-admin" class="content-section main-content">
+        <div class="card">
+            <h2>Módulo Raphael</h2>
+            <div class="form-group"><label>Título</label><input type="text" id="raphaelTitle"></div>
+            <div class="form-group"><label>Descripción</label><textarea id="raphaelContent"></textarea></div>
+            <button class="btn-publish" id="btn-save-raphael">Actualizar Sistema</button>
+        </div>
+        <div class="card"><h2>Sistemas Activos</h2><div id="raphaelList" class="post-list"></div></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDo7ebAVDvYEjPDscivWWKXLUoGEAGBeIM",
+            authDomain: "thenewwest-7eb5f.firebaseapp.com",
+            projectId: "thenewwest-7eb5f",
+            storageBucket: "thenewwest-7eb5f.firebasestorage.app",
+            messagingSenderId: "605270552271",
+            appId: "1:605270552271:web:a58b5b7f619e5804d7d1ba",
+            databaseURL: "https://thenewwest-7eb5f-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // --- SEGURIDAD ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) { document.body.style.display = "block"; } 
+            else { window.location.href = "../index.html"; }
+        });
+
+        document.getElementById('btnLogout').onclick = () => signOut(auth);
+
+        window.switchTab = (event, sectionId) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+        };
+
+        // --- CRUD GENERAL ---
+        const saveItem = (path, data) => {
+            const newRef = push(ref(db, path));
+            set(newRef, { ...data, date: new Date().toLocaleString() })
+                .then(() => alert("¡Publicado correctamente!"))
+                .catch((error) => console.error("Error:", error));
+        };
+
+        window.deleteItem = (path, id) => {
+            if(confirm("¿Estás seguro de eliminar este registro?")) remove(ref(db, `${path}/${id}`));
+        };
+
+        // --- ASIGNACIÓN DE BOTONES ---
+        document.getElementById('btn-save-news').onclick = () => {
+            saveItem('news', { 
+                title: document.getElementById('newsTitle').value, 
+                content: document.getElementById('newsContent').value 
+            });
+            document.getElementById('newsTitle').value = "";
+            document.getElementById('newsContent').value = "";
+        };
+
+        document.getElementById('btn-save-event').onclick = () => {
+            saveItem('events', { 
+                title: document.getElementById('eventTitle').value, 
+                content: document.getElementById('eventContent').value 
+            });
+            document.getElementById('eventTitle').value = "";
+            document.getElementById('eventContent').value = "";
+        };
+
+        document.getElementById('btn-save-staff').onclick = () => {
+            saveItem('staff', { 
+                name: document.getElementById('staffName').value, 
+                range: document.getElementById('staffRange').value 
+            });
+            document.getElementById('staffName').value = "";
+            document.getElementById('staffRange').value = "";
+        };
+
+        document.getElementById('btn-save-lore').onclick = () => {
+            saveItem('lore', { 
+                year: document.getElementById('loreYear').value,
+                title: document.getElementById('loreTitle').value, 
+                content: document.getElementById('loreContent').value 
+            });
+            document.getElementById('loreYear').value = "";
+            document.getElementById('loreTitle').value = "";
+            document.getElementById('loreContent').value = "";
+        };
+
+        document.getElementById('btn-save-raphael').onclick = () => {
+            saveItem('raphael', { 
+                title: document.getElementById('raphaelTitle').value, 
+                content: document.getElementById('raphaelContent').value 
+            });
+            document.getElementById('raphaelTitle').value = "";
+            document.getElementById('raphaelContent').value = "";
+        };
+
+        // --- RENDER ESPECIAL WHITELIST ---
+        onValue(ref(db, 'whitelist_requests'), (snapshot) => {
+            const list = document.getElementById('wlReqList');
             const data = snapshot.val();
-            if (!data) { list.innerHTML = '<p style="padding:10px; color:#94a3b8;">No hay registros.</p>'; return; }
-            
+            if (!data) { list.innerHTML = '<p style="text-align:center; padding:20px;">No hay solicitudes pendientes.</p>'; return; }
+
+            list.innerHTML = Object.keys(data).map(id => {
+                const item = data[id];
+                const fichaOk = item.fichaSubida === 'si';
+                return `
+                    <div class="post-item" style="border-left: 5px solid ${fichaOk ? '#22c55e' : '#ef4444'}">
+                        <div class="post-info">
+                            <h3 style="font-size:1.1rem; color:#0f172a;">${item.nick}</h3>
+                            <p><strong>Discord:</strong> ${item.discord}</p>
+                            <p>Ficha en Discord: <span class="status-pill ${fichaOk ? 'pill-yes' : 'pill-no'}">${fichaOk ? 'SUBIDA' : 'PENDIENTE'}</span></p>
+                            <div class="post-meta">Solicitado el: ${item.date}</div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-approve" onclick="window.deleteItem('whitelist_requests', '${id}')" title="Aceptar y limpiar"><i class="fas fa-check-circle"></i></button>
+                            <button class="btn-delete" onclick="window.deleteItem('whitelist_requests', '${id}')" title="Rechazar"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).reverse().join('');
+        });
+
+        // --- RENDER GENÉRICO PARA LISTAS ---
+        const renderBasic = (path, listId) => {
+            onValue(ref(db, path), (snapshot) => {
+                const list = document.getElementById(listId);
+                const data = snapshot.val();
+                if (!data) { list.innerHTML = '<p style="color:#94a3b8; font-size:0.8rem;">No hay registros.</p>'; return; }
+                list.innerHTML = Object.keys(data).map(id => `
+                    <div class="post-item">
+                        <div class="post-info">
+                            <h3>${data[id].title || data[id].name || data[id].year || 'Sin título'}</h3>
+                            <p style="font-size:0.75rem;">${data[id].date}</p>
+                        </div>
+                        <button class="btn-delete" onclick="window.deleteItem('${path}', '${id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `).reverse().join('');
+            });
+        };
+
+        // --- RENDER ESPECIAL ARTE (Aprobaciones) ---
+        onValue(ref(db, 'art_pending'), (snapshot) => {
+            const list = document.getElementById('artPendingList');
+            const data = snapshot.val();
+            if (!data) { list.innerHTML = '<p style="color:#94a3b8; font-size:0.8rem;">Nada pendiente.</p>'; return; }
             list.innerHTML = Object.keys(data).map(id => `
                 <div class="post-item">
-                    <div class="post-info">
-                        <h3>${data[id].title || data[id].year || 'Registro'}</h3>
-                        <p style="font-size:0.8rem;">${data[id].date}</p>
+                    <div class="post-flex">
+                        <img src="${data[id].url}" class="art-thumb">
+                        <div class="post-info">
+                            <h3>${data[id].title}</h3>
+                            <p>Por: ${data[id].author}</p>
+                        </div>
                     </div>
-                    <button class="btn-delete" onclick="window.deleteItem('${path}', '${id}')"><i class="fas fa-trash"></i></button>
+                    <div class="action-btns">
+                        <button class="btn-approve" onclick="approveArt('${id}', ${JSON.stringify(data[id]).replace(/"/g, '&quot;')})"><i class="fas fa-check-circle"></i></button>
+                        <button class="btn-delete" onclick="window.deleteItem('art_pending', '${id}')"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
-            `).reverse().join('');
+            `).join('');
         });
-    };
 
-    // Carga inicial de listas
-    renderBasic('news', 'newsList');
-    renderBasic('events', 'eventsList');
-    renderBasic('staff', 'staffList');
-    renderBasic('lore', 'loreAdminList');
-    renderBasic('art', 'artList');
-    renderBasic('raphael', 'raphaelList');
+        window.approveArt = (id, artData) => {
+            saveItem('art', artData);
+            remove(ref(db, `art_pending/${id}`));
+        };
 
-    // (Tu lógica de Whitelist se mantiene igual abajo...)
-</script>
+        // Inicializar todas las listas
+        renderBasic('news', 'newsList');
+        renderBasic('events', 'eventsList');
+        renderBasic('staff', 'staffList');
+        renderBasic('lore', 'loreAdminList');
+        renderBasic('art', 'artList');
+        renderBasic('raphael', 'raphaelList');
+
+    </script>
+</body>
+</html>
