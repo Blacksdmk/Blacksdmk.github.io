@@ -14,17 +14,20 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
+            --raphael: #7c3aed; /* Color para el Sistema Raphael */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: white; color: var(--text-main); line-height: 1.6; }
 
+        /* --- NAVEGACIÓN --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; color: var(--dark); }
         .nav-links { display: flex; gap: 25px; }
-        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; cursor: pointer; }
         .nav-links a:hover { color: var(--primary); }
 
+        /* --- SECCIONES --- */
         .section { display: none; padding: 60px 8%; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -32,6 +35,7 @@
         .section-header { text-align: center; margin-bottom: 50px; }
         .section-header h2 { font-size: 2.5rem; color: var(--dark); letter-spacing: -1px; }
 
+        /* --- HERO --- */
         .hero-premium {
             background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), 
                         url('https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2070&auto=format&fit=crop'); 
@@ -40,98 +44,102 @@
         .badge { background: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
         .hero-premium h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 20px 0; color: white; letter-spacing: -2px; }
 
-        .ip-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; color: white; }
-        .ip-box:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .ip-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: inline-flex; align-items: center; gap: 10px; color: white; }
 
+        /* --- SISTEMA RAPHAEL --- */
+        .raphael-card { background: #f5f3ff; border: 2px solid var(--raphael); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 40px; }
+        .raphael-card i { font-size: 3rem; color: var(--raphael); margin-bottom: 20px; }
+        .raphael-status { display: inline-block; padding: 5px 15px; border-radius: 20px; background: #ddd6fe; color: #5b21b6; font-weight: 700; font-size: 0.8rem; margin-top: 10px; }
+
+        /* --- GRID & CARDS --- */
         .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card-post { padding: 30px; border: 1px solid var(--border); border-radius: 16px; background: white; }
-        
-        .upload-card { background: var(--light-bg); border-radius: 16px; padding: 30px; margin-bottom: 40px; border: 2px dashed var(--border); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted); }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }
-        .btn-upload { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
-
         .staff-card { text-align: center; padding: 30px; border: 1px solid var(--border); border-radius: 16px; }
-        .staff-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--primary); }
-        
+        .staff-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 15px; }
+
         .bounty-card { background: #fdf5e6; border: 2px solid #4a0404; padding: 20px; text-align: center; color: #4a0404; }
         .bounty-card img { width: 100%; height: 250px; object-fit: cover; border: 1px solid #4a0404; margin-bottom: 15px; }
+
+        /* --- LOGIN POPUP --- */
+        #loginOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(15, 23, 42, 0.9); z-index: 2000; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 20px; width: 350px; text-align: center; }
+        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 8px; }
+        .btn-login { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
         footer { padding: 60px 40px; text-align: center; border-top: 1px solid var(--border); margin-top: 80px; }
     </style>
 </head>
 <body>
+
     <nav>
         <div class="logo"><i class="fas fa-hat-cowboy"></i> The New West</div>
         <div class="nav-links">
             <a onclick="showSection('inicio')">Inicio</a>
             <a onclick="showSection('noticias')">Noticias</a>
+            <a onclick="showSection('raphael')">Raphael</a>
             <a onclick="showSection('lore')">Lore</a>
             <a onclick="showSection('bounties')">Se Busca</a>
-            <a onclick="showSection('galeria')">Galería</a>
             <a onclick="showSection('staff')">Staff</a>
         </div>
     </nav>
 
+    <!-- INICIO -->
     <div id="inicio" class="section active">
         <div class="hero-premium">
             <span class="badge">Temporada 1</span>
             <h1>The New West</h1>
             <p>Escribe tu propia historia en el Salvaje Oeste.</p>
-            <div style="margin-top: 30px;">
+            <div style="margin-top: 25px;">
                 <div class="ip-box" onclick="copyIP()">
                     <span id="serverIP">play.thenewwest.com</span> <i class="fas fa-copy"></i>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- SISTEMA RAPHAEL -->
+    <div id="raphael" class="section">
+        <div class="section-header"><h2>Sistema Raphael</h2></div>
+        <div class="raphael-card">
+            <i class="fas fa-microchip"></i>
+            <h3>Inteligencia Artificial Vigilante</h3>
+            <p>Raphael monitorea el comportamiento del servidor, gestiona eventos dinámicos y asegura el fair-play en tiempo real.</p>
+            <div class="raphael-status">ESTADO: OPERATIVO</div>
+        </div>
         <div class="content-grid">
-            <div class="card-post"><h3><i class="fas fa-horse"></i> Caballos</h3><p>Sistema de crianza con estadísticas únicas.</p></div>
-            <div class="card-post"><h3><i class="fas fa-gun"></i> Duelos</h3><p>Mecánicas de combate equilibradas.</p></div>
-            <div class="card-post"><h3><i class="fas fa-university"></i> Bancos</h3><p>Asaltos y economía dinámica.</p></div>
+            <div class="card-post"><h4><i class="fas fa-shield-alt"></i> Anti-Grief</h4><p>Protección inteligente de terrenos.</p></div>
+            <div class="card-post"><h4><i class="fas fa-bolt"></i> Eventos</h4><p>Generación de encuentros aleatorios.</p></div>
         </div>
     </div>
 
-    <div id="noticias" class="section">
-        <div class="section-header"><h2>Noticias</h2></div>
-        <div id="dynamicNews" class="content-grid">Cargando noticias...</div>
-    </div>
+    <!-- NOTICIAS, LORE, STAFF, BOUNTIES (CONTENEDORES) -->
+    <div id="noticias" class="section"><div class="section-header"><h2>Noticias</h2></div><div id="dynamicNews" class="content-grid"></div></div>
+    <div id="lore" class="section"><div class="section-header"><h2>Lore</h2></div><div id="dynamicLore" class="content-grid"></div></div>
+    <div id="staff" class="section"><div class="section-header"><h2>Staff</h2></div><div id="dynamicStaff" class="content-grid"></div></div>
+    <div id="bounties" class="section"><div class="section-header"><h2>Se Busca</h2></div><div id="dynamicBounties" class="content-grid"></div></div>
 
-    <div id="lore" class="section">
-        <div class="section-header"><h2>Cronología</h2></div>
-        <div id="dynamicLore" class="content-grid">Cargando historia...</div>
-    </div>
-
-    <div id="staff" class="section">
-        <div class="section-header"><h2>Staff</h2></div>
-        <div id="dynamicStaff" class="content-grid">Cargando equipo...</div>
-    </div>
-
-    <div id="bounties" class="section">
-        <div class="section-header"><h2>Carteles de Se Busca</h2></div>
-        <div id="dynamicBounties" class="content-grid">Sin fugitivos...</div>
-    </div>
-
-    <div id="galeria" class="section">
-        <div class="section-header"><h2>Galería</h2></div>
-        <div class="upload-card">
-            <div class="form-group"><label>Título de la obra</label><input type="text" id="artTitle" placeholder="Ej: Atardecer en el rancho"></div>
-            <div class="form-group"><label>URL de la imagen</label><input type="text" id="artUrl" placeholder="https://..."></div>
-            <button class="btn-upload" id="btn-upload-art">Publicar en Galería</button>
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h3>Acceso Staff</h3>
+            <input type="email" id="logEmail" placeholder="Correo">
+            <input type="password" id="logPass" placeholder="Contraseña">
+            <button class="btn-login" id="btnDoLogin">Entrar</button>
+            <button onclick="document.getElementById('loginOverlay').style.display='none'" style="margin-top:10px; background:none; border:none; color:gray; cursor:pointer;">Cancelar</button>
         </div>
-        <div id="dynamicArt" class="content-grid">Cargando galería...</div>
     </div>
 
     <footer>
         <p>© 2026 The New West</p>
-        <a href="./app/admin.html" style="color: #64748b; font-size: 0.75rem; text-decoration: none; margin-top: 10px; display: inline-block;">
-            <i class="fas fa-lock"></i> Acceso Staff
+        <a onclick="document.getElementById('loginOverlay').style.display='flex'" style="color: #64748b; font-size: 0.75rem; cursor: pointer;">
+            <i class="fas fa-lock"></i> Panel Administrativo
         </a>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDo7ebAVDvYEjPDscivWWKXLUoGEAGBeIM",
@@ -145,97 +153,44 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
 
-        // --- FUNCIONES GLOBALES ---
+        // --- FUNCIONES ---
         window.showSection = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
+            document.getElementById(id).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
         window.copyIP = () => {
             navigator.clipboard.writeText("play.thenewwest.com");
-            alert("¡IP copiada al portapapeles!");
+            alert("¡IP Copiada!");
         };
 
-        // --- CARGADOR DINÁMICO (PROTEGIDO) ---
-        const loadData = (path, containerId, templateFn) => {
-            onValue(ref(db, path), (snapshot) => {
-                const container = document.getElementById(containerId);
-                const data = snapshot.val();
-                if (!data) {
-                    container.innerHTML = "<p>No hay contenido disponible por ahora.</p>";
-                    return;
-                }
-                // Convertimos objeto a Array, revertimos para ver lo más nuevo y mapeamos
-                const html = Object.values(data).reverse().map(item => templateFn(item)).join('');
-                container.innerHTML = html;
-            }, (error) => {
-                console.error("Error cargando " + path, error);
+        // --- LOGIN ---
+        document.getElementById('btnDoLogin').onclick = () => {
+            const email = document.getElementById('logEmail').value;
+            const pass = document.getElementById('logPass').value;
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(() => { window.location.href = "app/admin.html"; })
+                .catch(err => alert("Acceso denegado: " + err.message));
+        };
+
+        // --- CARGA DE DATOS ---
+        const load = (path, divId, draw) => {
+            onValue(ref(db, path), (snap) => {
+                const data = snap.val();
+                const container = document.getElementById(divId);
+                if (!data) { container.innerHTML = "<p>Próximamente...</p>"; return; }
+                container.innerHTML = Object.values(data).reverse().map(draw).join('');
             });
         };
 
-        // --- TEMPLATES (CON VALIDACIÓN DE CAMPOS) ---
-        loadData('news', 'dynamicNews', n => `
-            <div class="card-post">
-                <small style="color:var(--primary)">${n.date || 'Reciente'}</small>
-                <h3>${n.title || 'Sin título'}</h3>
-                <p>${n.content || ''}</p>
-            </div>
-        `);
+        load('news', 'dynamicNews', n => `<div class="card-post"><span>${n.date || ''}</span><h3>${n.title}</h3><p>${n.content}</p></div>`);
+        load('lore', 'dynamicLore', l => `<div class="card-post"><span>Año ${l.year}</span><h3>${l.title}</h3><p>${l.content}</p></div>`);
+        load('staff', 'dynamicStaff', s => `<div class="staff-card"><img src="${s.url}" class="staff-avatar"><h3>${s.name}</h3><p>${s.role}</p></div>`);
+        load('bounties', 'dynamicBounties', b => `<div class="bounty-card"><b>WANTED</b><img src="${b.url}"><h3>${b.name}</h3><p>$${b.reward}</p></div>`);
 
-        loadData('lore', 'dynamicLore', l => `
-            <div class="card-post">
-                <small>Año ${l.year || '???'}</small>
-                <h3>${l.title || 'Capítulo'}</h3>
-                <p>${l.content || ''}</p>
-            </div>
-        `);
-
-        loadData('staff', 'dynamicStaff', s => `
-            <div class="staff-card">
-                <img src="${s.url || 'https://via.placeholder.com/100'}" class="staff-avatar">
-                <h3>${s.name || 'Staff'}</h3>
-                <p style="color:var(--primary)">${s.role || 'Miembro'}</p>
-            </div>
-        `);
-
-        loadData('bounties', 'dynamicBounties', b => `
-            <div class="bounty-card">
-                <b style="letter-spacing:2px">WANTED</b>
-                <img src="${b.url || 'https://via.placeholder.com/250'}">
-                <h3>${b.name || 'Desconocido'}</h3>
-                <p style="font-weight:800; font-size:1.2rem">$${b.reward || '0'}</p>
-            </div>
-        `);
-
-        loadData('art', 'dynamicArt', a => `
-            <div class="card-post">
-                <img src="${a.url}" style="width:100%; border-radius:8px; margin-bottom:10px;">
-                <p style="text-align:center; font-weight:600;">${a.title || 'Obra'}</p>
-            </div>
-        `);
-
-        // --- SUBIR ARTE ---
-        document.getElementById('btn-upload-art').onclick = () => {
-            const title = document.getElementById('artTitle').value;
-            const url = document.getElementById('artUrl').value;
-            
-            if(title && url) {
-                push(ref(db, 'art'), { 
-                    title: title, 
-                    url: url,
-                    date: new Date().toLocaleDateString()
-                }).then(() => {
-                    alert("¡Gracias por compartir tu arte!");
-                    document.getElementById('artTitle').value = "";
-                    document.getElementById('artUrl').value = "";
-                }).catch(e => alert("Error al subir: " + e.message));
-            } else {
-                alert("Por favor rellena ambos campos.");
-            }
-        };
     </script>
 </body>
 </html>
