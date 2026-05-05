@@ -140,9 +140,12 @@
         <div id="dynamicArt" class="content-grid"></div>
     </div>
 
-    <footer>
+   <footer>
         <p>© 2026 The New West - Minecraft Roleplay</p>
-        <a href="app/admin.html" style="color: #cbd5e1; font-size: 0.75rem; text-decoration: none;">Panel Staff</a>
+        <!-- He añadido target="_self" para asegurar que intente navegar a la ruta del archivo -->
+        <a href="app/admin.html" target="_self" style="color: #cbd5e1; font-size: 0.75rem; text-decoration: none; margin-top: 10px; display: inline-block; cursor: pointer;">
+            <i class="fas fa-lock"></i> Panel de Administración
+        </a>
     </footer>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
